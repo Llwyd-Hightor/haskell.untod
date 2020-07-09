@@ -51,20 +51,22 @@ cabal-version:       >=1.10
 
 executable untod
   -- .hs or .lhs file containing the Main module.
-  main-is:             Main.hs
+  main-is:          Main.hs
   
   -- Modules included in this executable, other than Main.
-  -- other-modules:       
+  other-modules:    Untod.Args,
+                    Untod.Version       
   
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:    
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.10 && <4.11
+  build-depends:    base >=4.10 && <4.11, 
+                    optparse-applicative >= 0.15.1.0,
+                    githash >= 0.1.4.0
   
   -- Directories containing source files.
   hs-source-dirs:      src
   
   -- Base language which the package is written in.
   default-language:    Haskell2010
-  
