@@ -2,7 +2,7 @@ module Main where
 
 import Untod.Args
 import Untod.Data
-import Untod.Formats
+import Untod.Formatters
 import Untod.Zones
 import Options.Applicative
 import System.Environment (lookupEnv)

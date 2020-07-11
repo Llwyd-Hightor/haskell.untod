@@ -1,4 +1,4 @@
-module Untod.Formats
+module Untod.Formatters
     where
 
 import Text.Printf
