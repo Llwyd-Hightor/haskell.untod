@@ -55,7 +55,9 @@ executable untod
   
   -- Modules included in this executable, other than Main.
   other-modules:    Untod.Args,
-                    Untod.Version       
+                    Untod.Version,       
+                    Untod.LeapSecTab,
+                    Untod.Offsets       
   
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:    
@@ -63,7 +65,8 @@ executable untod
   -- Other library packages from which modules are imported.
   build-depends:    base >=4.10 && <4.11, 
                     optparse-applicative >= 0.15.1.0,
-                    githash >= 0.1.4.0
+                    githash >= 0.1.4.0,
+                    time
   
   -- Directories containing source files.
   hs-source-dirs:      src
