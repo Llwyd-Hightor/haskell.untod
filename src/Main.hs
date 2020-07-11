@@ -1,12 +1,12 @@
 module Main where
 
 import Untod.Args
-import Untod.LeapSecTab
-import Untod.Offsets
+import Untod.Data
+import Untod.Formats
+import Untod.Zones
 import Options.Applicative
-import System.Environment
-import Data.Time
-import Text.Read
+import System.Environment (lookupEnv)
+import Data.Time (timeZoneMinutes, getCurrentTimeZone)
 import System.Clipboard
 import System.Directory
 import System.IO
@@ -33,6 +33,12 @@ getClip (False, _)      = []
 getClip (True, Nothing) = []
 getClip (True, Just s)  = words s
 
+fPrin :: TickMode -> [Int] -> IO ()
+fPrin _ [] = return ()
+fPrin m (x:xs) = do
+    print $ formatZone m x
+    fPrin m xs
+
 main :: IO ()
 main = do
 
@@ -57,6 +63,6 @@ let zList = buildZlist options utwork
 
 print options
 print utwork 
-print zList
+fPrin (tickmode options) zList
 -- print utClip
 -- print (uClip utwork)

@@ -3,7 +3,7 @@ module Untod.LeapSecTab (
   , lsSearchByTOD 
   ) where
 
-import Untod.Args
+import Untod.Data
 import Data.Time
 
 data LeapSec = LeapSec {
