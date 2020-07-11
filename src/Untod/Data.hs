@@ -7,7 +7,8 @@ module Untod.Data (
 
 ) where 
 
-data RunMode = TOD | DATE | PMC | UNIX | CSEC 
+data RunMode = TOD | DATE | PMC | UNIX | CSEC
+      deriving Eq
 instance Show RunMode where 
       show TOD  = "<== TOD"
       show DATE = "<== Date/Time"

@@ -2,8 +2,8 @@ module Main where
 
 import Untod.Args
 import Untod.Data
-import Untod.Formatters
 import Untod.Zones
+import Untod.Process
 import Options.Applicative
 import System.Environment (lookupEnv)
 import Data.Time (timeZoneMinutes, getCurrentTimeZone)
@@ -33,11 +33,11 @@ getClip (False, _)      = []
 getClip (True, Nothing) = []
 getClip (True, Just s)  = words s
 
-fPrin :: TickMode -> [Int] -> IO ()
-fPrin _ [] = return ()
-fPrin m (x:xs) = do
-    print $ formatZone m x
-    fPrin m xs
+fPrin :: [String] -> IO ()
+fPrin [] = return ()
+fPrin (x:xs) = do
+    print x
+    fPrin xs
 
 main :: IO ()
 main = do
@@ -61,8 +61,8 @@ let utwork = Uwork {
 
 let zList = buildZlist options utwork
 
-print options
-print utwork 
-fPrin (tickmode options) zList
+-- print options
+-- print utwork 
+fPrin (processAll (uInput utwork) options utwork zList)
 -- print utClip
 -- print (uClip utwork)

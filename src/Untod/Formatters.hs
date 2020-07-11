@@ -4,6 +4,16 @@ module Untod.Formatters
 import Text.Printf
 import Untod.Data
 
+headerList :: Bool -> Bool -> [String]
+headerList False _ = []
+headerList True  False = 
+    [ "Ext       TOD              Date          Time        Zone     Julian   D    Perp        Unix      Leap"
+   , "--- ----------------- : ---------- --------------- --------- -------- --- -------- -------------- ----" 
+    ]                
+headerList True True = 
+    [ "ExtTOD,Date,Time,Zone,Julian,D,Perp,Unix,Leap" 
+    ]
+
 formatTod :: Integer -> String
 formatTod t = concat [a," ",b," ",c,"---"] where
     s = printf "%016x" t
