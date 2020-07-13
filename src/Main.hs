@@ -8,7 +8,7 @@ import Options.Applicative
 import System.Environment (lookupEnv)
 import Data.Time (timeZoneMinutes, getCurrentTimeZone)
 import System.Clipboard
--- import System.Directory
+import System.Directory
 import System.IO
 import Control.DeepSeq
 
@@ -18,17 +18,15 @@ getInput Nothing = do
 getInput (Just "-") = do
         contents <- getContents
         return $ words contents
-getInput _ = do
-    return []
--- getInput (Just s) = do
---     isthere <- doesFileExist s
---     if isthere then do
---         handle <- openFile s ReadMode
---         contents <- hGetContents handle
---         contents `deepseq` hClose handle
---         return $ words contents
---     else do
---         return []
+getInput (Just s) = do
+    isthere <- doesFileExist s
+    if isthere then do
+        handle <- openFile s ReadMode
+        contents <- hGetContents handle
+        contents `deepseq` hClose handle
+        return $ words contents
+    else do
+        return []
 
 getClip :: ( Bool, Maybe String ) -> [String]
 getClip (False, _)      = []
