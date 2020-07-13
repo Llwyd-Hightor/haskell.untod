@@ -8,7 +8,7 @@ import Options.Applicative
 import System.Environment (lookupEnv)
 import Data.Time (timeZoneMinutes, getCurrentTimeZone)
 import System.Clipboard
-import System.Directory
+-- import System.Directory
 import System.IO
 import Control.DeepSeq
 
@@ -18,15 +18,17 @@ getInput Nothing = do
 getInput (Just "-") = do
         contents <- getContents
         return $ words contents
-getInput (Just s) = do
-    isthere <- doesFileExist s
-    if isthere then do
-        handle <- openFile s ReadMode
-        contents <- hGetContents handle
-        contents `deepseq` hClose handle
-        return $ words contents
-    else do
-        return []
+getInput _ = do
+    return []
+-- getInput (Just s) = do
+--     isthere <- doesFileExist s
+--     if isthere then do
+--         handle <- openFile s ReadMode
+--         contents <- hGetContents handle
+--         contents `deepseq` hClose handle
+--         return $ words contents
+--     else do
+--         return []
 
 getClip :: ( Bool, Maybe String ) -> [String]
 getClip (False, _)      = []
@@ -41,28 +43,27 @@ fPrin (x:xs) = do
 
 main :: IO ()
 main = do
+    options <- execParser utOpts
 
-options <- execParser utOpts
+    aEnvZone <- lookupEnv "UNTOD_AZONE"
+    lEnvZone <- lookupEnv "UNTOD_LZONE"
+    lSysZone <- (liftA timeZoneMinutes getCurrentTimeZone)
+    utClip   <- getClipboardString 
+    utInput  <- getInput $ input options
 
-aEnvZone <- lookupEnv "UNTOD_AZONE"
-lEnvZone <- lookupEnv "UNTOD_LZONE"
-lSysZone <- (liftA timeZoneMinutes getCurrentTimeZone)
-utClip   <- getClipboardString 
-utInput  <- getInput $ input options
+    let utwork = Uwork {
+        aEnvZone = convZone aEnvZone
+    , lEnvZone = convZone lEnvZone
+    , lSysZone = lSysZone * 60
+    , uInput   = (alist options) 
+                ++ (getClip ((clip options), utClip))
+                ++ utInput
+    }
 
-let utwork = Uwork {
-    aEnvZone = convZone aEnvZone
-  , lEnvZone = convZone lEnvZone
-  , lSysZone = lSysZone * 60
-  , uInput   = (alist options) 
-            ++ (getClip ((clip options), utClip))
-            ++ utInput
-}
+    let zList = buildZlist options utwork
 
-let zList = buildZlist options utwork
-
--- print options
--- print utwork 
-fPrin (processAll (uInput utwork) options utwork zList)
--- print utClip
--- print (uClip utwork)
+    -- print options
+    -- print utwork 
+    fPrin (processAll (uInput utwork) options utwork zList)
+    -- print utClip
+    -- print (uClip utwork)
