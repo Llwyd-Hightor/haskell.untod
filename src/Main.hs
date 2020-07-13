@@ -2,11 +2,20 @@ module Main where
 
 import Untod.Args
 import Untod.Data
+import Untod.Formatters
 import Untod.Zones
 import Untod.Process
 import Options.Applicative
-import System.Environment (lookupEnv)
-import Data.Time (timeZoneMinutes, getCurrentTimeZone)
+import System.Environment (
+    lookupEnv
+    )
+import Data.Time (
+    timeZoneMinutes
+  , getCurrentTime
+  , formatTime
+  , getCurrentTimeZone
+  , defaultTimeLocale
+  )
 import System.Clipboard
 import System.Directory
 import System.IO
@@ -36,7 +45,7 @@ getClip (True, Just s)  = words s
 fPrin :: [String] -> IO ()
 fPrin [] = return ()
 fPrin (x:xs) = do
-    print x
+    putStrLn x
     fPrin xs
 
 main :: IO ()
@@ -48,14 +57,19 @@ main = do
     lSysZone <- (liftA timeZoneMinutes getCurrentTimeZone)
     utClip   <- getClipboardString 
     utInput  <- getInput $ input options
+    utNow    <- getCurrentTime
 
     let utwork = Uwork {
-        aEnvZone = convZone aEnvZone
+      aEnvZone = convZone aEnvZone
     , lEnvZone = convZone lEnvZone
     , lSysZone = lSysZone * 60
     , uInput   = (alist options) 
                 ++ (getClip ((clip options), utClip))
                 ++ utInput
+    , uNow     = ftime "%F@%T%Q" utNow
+    , tSep     = if (csv options) then [] else " :"
+    , rSep     = if (csv options) then "," else " "
+    , tAdj     = if (tickmode options == TAI) then 10 else 0
     }
 
     let zList = buildZlist options utwork
