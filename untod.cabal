@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 03f5cf5f79b377a3704adf046710e439dc6dfadf5c67285a089285ff6cb1ef0a
+-- hash: c993b2887e63790c18761a3077b13628c51597214beab3ecf5f00963b0b2d933
 
 name:           untod
 version:        0.1.0.0
@@ -46,6 +46,7 @@ executable untod
       Clipboard
     , base >=4.7 && <5
     , deepseq
+    , directory
     , githash >=0.1.4.0
     , optparse-applicative >=0.15.1.0
     , time

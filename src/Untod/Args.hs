@@ -42,6 +42,10 @@ utargs = Uargs
           ( long "headers"
             <> help "Output column headers" )
       <*> switch
+          ( long "annot"
+            <> short 'a'
+            <> help "Annotate plain output with run mode" )
+      <*> switch
           ( long "zulu"
             <> short 'z'
             <> help "Suppress Zulu offset result if others given" )

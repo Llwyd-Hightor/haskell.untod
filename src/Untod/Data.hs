@@ -40,6 +40,7 @@ data Uargs = Uargs {
   , clip     :: Bool              -- Include data from clipboard
   , csv      :: Bool              -- Output in CSV format
   , headers  :: Bool              -- Output includes column headers
+  , annot    :: Bool              -- Annotate plain output with run mode
   , zulu     :: Bool              -- Suppress GMT if any other zones
   , tickmode :: TickMode          -- Clock convention
   , padmode  :: PadMode           -- How to pad TOD clocks

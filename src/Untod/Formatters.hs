@@ -33,3 +33,9 @@ formatZone t s = r where
     h = printf "%+03d" (fst x)
     m = printf "%02d"  (abs (div (snd x) 60))
     r = concat [show t,h,":",m]
+
+formatAnnot :: Uargs -> String
+formatAnnot u = 
+    if   annot u > csv u 
+        then show $ runmode u
+        else []

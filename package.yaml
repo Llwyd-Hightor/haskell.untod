@@ -22,13 +22,13 @@ category:            Utility
 description:         Please see the README on GitHub at <https://github.com/longborough/untod#readme>
 
 dependencies:
-    - base >=4.7 && <5
-    - optparse-applicative >= 0.15.1.0
-    - githash >= 0.1.4.0
-    - time
-    # - untod
-    - deepseq
-    - Clipboard
+- base >=4.7 && <5
+- optparse-applicative >= 0.15.1.0
+- githash >= 0.1.4.0
+- time
+# - untod
+- deepseq
+- Clipboard
 
 # library:
 #   source-dirs: src
@@ -47,6 +47,7 @@ executables:
     - optparse-applicative >= 0.15.1.0
     - githash >= 0.1.4.0
     - time
+    - directory
     # - untod
     - deepseq
     - Clipboard
