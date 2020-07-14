@@ -98,7 +98,46 @@ calcUnix :: UTCTime -> Integer
 calcUnix t = floor $ diffUTCTime t uBase  
 
 processFromDATE :: String -> Uargs -> Uwork -> Int -> String
-processFromDATE v a w z = undefined
+processFromDATE v a w z = r where
+    r = if xdate == Nothing
+      then
+          ptod ++ " is not valid hexadecimal"
+      else
+        ( joinRow (rSep w)
+        [ rtod, rdate, rtime, rzone, rjul
+        , rday, rpmc, runix, rleap ])
+       ++ rnote    
+    rtod  = undefined
+    rdate = undefined
+    rtime = undefined
+    rjul  = undefined
+    rzone = undefined
+    rday  = undefined
+    rpmc  = undefined
+    runix = undefined
+    rleap = undefined
+    rnote = undefined
+    ptod  = undefined
+    xdate :: Maybe UTCTime
+    xdate = Nothing
+
+getdate :: String -> Maybe UTCTime
+getdate s = case length s of 
+    4 -> ptime "%Y" s
+    5 -> ptime "%Y" (take 4 s)
+    7 -> tryjulian s  
+    8 -> ptime "%Y-%M" (take 7 s)  
+    otherwise -> Nothing
+
+tryjulian :: String -> Maybe UTCTime
+tryjulian s = if d == Nothing
+    then ptime "%Y.%j" s
+    else d where
+        d  = ptime "%Y-%M" s
+
+
+
+ptime = parseTimeM False defaultTimeLocale
 
 processFromPMC  :: String -> Uargs -> Uwork -> Int -> String
 processFromPMC  v a w z = undefined
