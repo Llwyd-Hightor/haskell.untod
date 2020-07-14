@@ -45,12 +45,14 @@ formatPmc :: Maybe Integer -> String
 formatPmc (Just i) = printf "%08x" i   
 formatPmc Nothing = "--------"   
 
-formatUnix :: Integer -> String
-formatUnix = printf "%14d"
+formatUnix :: Bool -> Integer -> String
+formatUnix False i = printf "%14d" i
+formatUnix True i = printf "%d" i
 
-formatLsec :: TickMode -> Int -> String
-formatLsec UTC i = printf "*%+d" i
-formatLsec  _  i = []
+formatLsec :: Bool -> TickMode -> Int -> String
+formatLsec _ UTC i = printf "*%+d" i
+formatLsec True _  i = "NA"                     -- CSV mode
+formatLsec False _  i = "    "                  -- Pad Non-CSV mode
 
 formatAnnot :: Uargs -> String
 formatAnnot a = 

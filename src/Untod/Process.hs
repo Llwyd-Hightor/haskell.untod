@@ -75,8 +75,8 @@ processFromTOD  v a w z = r where
     rzone = formatZone (tickmode a) z
     rday  = formatDay xdate
     rpmc  = formatPmc $ calcPMC xdate
-    runix = formatUnix $ calcUnix udate
-    rleap = formatLsec (tickmode a) lsec
+    runix = (formatUnix (csv a)) $ calcUnix udate
+    rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
     xtod = readMaybe ("0x" ++ ptod) :: Maybe Integer
     itod = fromJust xtod
@@ -110,5 +110,16 @@ processFromCSEC :: String -> Uargs -> Uwork -> Int -> String
 processFromCSEC v a w z = undefined
 
 joinRow :: String -> [String] -> String
-joinRow  _ [] =  []
-joinRow x (s:ss) = s ++ x ++ joinRow x ss
+joinRow d s = init $ joinR d s
+
+joinR :: String -> [String] -> String
+joinR  _ [] =  []
+joinR d (s:ss) = s ++ d ++ joinR d ss
+
+-- joinRow :: Bool -> [String] -> String
+-- joinRow a s = init $ joinR a s
+
+-- joinR :: Bool -> [String] -> String
+-- joinR  a [] =  []
+-- joinR a (s:ss) = s ++ d ++ joinR a ss where
+--     d = if a then "," else " "
