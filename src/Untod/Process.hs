@@ -82,8 +82,8 @@ processFromTOD  v a w z = r where
     itod = fromJust xtod
     ptod = padTod (padmode a) v
     lsec = lsSearchByTOD (tickmode a) itod
-    tdiff = fromIntegral $ lsec + (tAdj w) - z
-    udiff = fromIntegral $ lsec + (tAdj w)
+    tdiff = fromIntegral $ lsec - (tAdj w) - z
+    udiff = fromIntegral $ lsec - (tAdj w)
     xdate = addUTCTime (0.000001 * (fromIntegral itod) - tdiff) tBase
     udate = addUTCTime (0.000001 * (fromIntegral itod) - udiff) tBase
 
