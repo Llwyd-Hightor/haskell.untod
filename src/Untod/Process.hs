@@ -11,30 +11,28 @@ import Untod.Formatters
 import Untod.LeapSecTab
 
 tBase = UTCTime {
-    utctDay = fromGregorian 1900 1 1 
+    utctDay = fromGregorian 1900 1 1
   , utctDayTime = 0.0
-} 
+}
 pBase = UTCTime {
-    utctDay = fromGregorian 1966 1 3 
+    utctDay = fromGregorian 1966 1 3
   , utctDayTime = 0.0
-} 
+}
 uBase = UTCTime {
-    utctDay = fromGregorian 1970 1 1 
+    utctDay = fromGregorian 1970 1 1
   , utctDayTime = 0.0
-} 
+}
 
 ptDelta = diffUTCTime pBase tBase
 utDelta = diffUTCTime uBase tBase
 
 processAll :: [String] -> Uargs -> Uwork -> [Int] -> [String]
 processAll [] a w z
-    | (runmode a) == DATE = processAll [thisDate] a w z
+    | (runmode a) == DATE = processAll [uNow w] a w z
     | otherwise = ["No data provided"]
 processAll l a w z =
     ( headerList (headers a) (csv a) ) ++
     ( processData l a w z)
-
-thisDate = "2020-07-11"
 
 processData :: [String] -> Uargs -> Uwork -> [Int] -> [String]
 processData [] _ _ _ = []
@@ -67,15 +65,15 @@ processFromTOD  v a w z = r where
         ( joinRow (rSep w)
         [ rtod, rdate, rtime, rzone, rjul
         , rday, rpmc, runix, rleap ])
-       ++ rnote    
+       ++ rnote
     rtod  = formatTod itod (tSep w)
     rdate = formatDatx xdate
     rtime = formatTimx xdate
     rjul  = formatJul xdate
     rzone = formatZone (tickmode a) z
     rday  = formatDay xdate
-    rpmc  = formatPmc $ calcPMC xdate
-    runix = (formatUnix (csv a)) $ calcUnix udate
+    rpmc  = formatPmc $ calcPmc z xdate
+    runix = (formatUnix (csv a)) $ calcUnix 0 udate
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
     xtod = readMaybe ("0x" ++ ptod) :: Maybe Integer
@@ -87,56 +85,59 @@ processFromTOD  v a w z = r where
     xdate = addUTCTime (0.000001 * (fromIntegral itod) - tdiff) tBase
     udate = addUTCTime (0.000001 * (fromIntegral itod) - udiff) tBase
 
-calcPMC :: UTCTime -> Maybe Integer
-calcPMC t = r where
-    x = floor $ diffUTCTime t pBase
-    r = if x >= 0 && x < 2^64 
-        then Just $ div x 60
-        else Nothing 
+calcUnix :: Int -> UTCTime -> Integer
+calcUnix z t = toInteger $ (z +) $ fromInteger $ floor $ diffUTCTime t uBase
 
-calcUnix :: UTCTime -> Integer
-calcUnix t = floor $ diffUTCTime t uBase  
+calcPmc :: Int -> UTCTime -> Maybe Integer
+calcPmc z t = r where
+    x = toInteger $ (z +) $ floor $ diffUTCTime t pBase
+    r = if x >= 0 && x < 2^64
+        then Just $ div x 60
+        else Nothing
 
 processFromDATE :: String -> Uargs -> Uwork -> Int -> String
 processFromDATE v a w z = r where
     r = if xdate == Nothing
       then
-          ptod ++ " is not valid hexadecimal"
+          v ++ " is not a recognisable date/time"
       else
         ( joinRow (rSep w)
         [ rtod, rdate, rtime, rzone, rjul
         , rday, rpmc, runix, rleap ])
-       ++ rnote    
-    rtod  = undefined
-    rdate = undefined
-    rtime = undefined
-    rjul  = undefined
-    rzone = undefined
-    rday  = undefined
-    rpmc  = undefined
-    runix = undefined
-    rleap = undefined
-    rnote = undefined
-    ptod  = undefined
-    xdate :: Maybe UTCTime
-    xdate = Nothing
+       ++ rnote
+    rtod = formatTod ltod (tSep w)
+    rdate = formatDatx $ fromJust xdate
+    rtime = formatTimx $ fromJust xdate
+    rjul  = formatJul  $ fromJust xdate
+    rzone = formatZone (tickmode a) z
+    rday  = formatDay  $ fromJust xdate
+    rpmc  = formatPmc  $ calcPmc z udate 
+    runix = (formatUnix (csv a)) $ calcUnix z udate
+    rleap = formatLsec (csv a) (tickmode a) lsec
+    rnote = formatAnnot a
+    xdate = getdate v
+    udate = fromJust xdate
+    tdate = addUTCTime ldiff udate
+    ltod = round $ (1000000 *) $ diffUTCTime tdate tBase
+    ldiff = fromIntegral $ lsec - (tAdj w) - z
+    udiff = fromIntegral $ lsec - (tAdj w)
+    lsec = lsSearchByDay (tickmode a) (utctDay udate)
 
 getdate :: String -> Maybe UTCTime
-getdate s = case length s of 
-    4 -> ptime "%Y" s
-    5 -> ptime "%Y" (take 4 s)
-    7 -> tryjulian s  
-    8 -> ptime "%Y-%M" (take 7 s)  
-    otherwise -> Nothing
+getdate s = if d == Nothing
+    then ptime "%Y.%j@%T%Q" j
+    else d where
+        t = s ++ drop (length s) "1900-01-01@00:00:00.000000000"
+        j = s ++ drop (length s) "1900.001@00:00:00.000000000"
+        d = ptime "%F@%T%Q" t
 
 tryjulian :: String -> Maybe UTCTime
 tryjulian s = if d == Nothing
     then ptime "%Y.%j" s
     else d where
-        d  = ptime "%Y-%M" s
+        d  = ptime "%Y-%m" (take 7 s)
 
-
-
+ptime :: String -> String -> Maybe UTCTime
 ptime = parseTimeM False defaultTimeLocale
 
 processFromPMC  :: String -> Uargs -> Uwork -> Int -> String
