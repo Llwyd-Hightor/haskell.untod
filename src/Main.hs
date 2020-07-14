@@ -66,7 +66,7 @@ main = do
     , uInput   = (alist options) 
                 ++ (getClip ((clip options), utClip))
                 ++ utInput
-    , uNow     = ftime "%F@%T%Q" utNow
+    , uNow     = (take 27) $ ftime "%F@%T%Q" utNow
     , tSep     = if (csv options) then [] else " :"
     , rSep     = if (csv options) then "," else " "
     , tAdj     = if (tickmode options == TAI) then 10 else 0
@@ -74,7 +74,7 @@ main = do
 
     let zList = buildZlist options utwork
 
-    -- print options
+    -- print options 
     -- print utwork 
     fPrin (processAll (uInput utwork) options utwork zList)
     -- print utClip
