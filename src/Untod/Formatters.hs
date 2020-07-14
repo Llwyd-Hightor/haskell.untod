@@ -25,15 +25,15 @@ formatTod t z = concat [a," ",b," ",c,"---",z] where
 formatDatx :: UTCTime -> String
 formatDatx  = ftime "%F"
 
+formatTimx :: UTCTime -> String
+formatTimx u = (take 15) $ ftime "%T%0Q" u
+
 formatZone :: TickMode -> Int -> String
 formatZone t s = r where
     x = quotRem s 3600
     h = printf "%+03d" (fst x)
     m = printf "%02d"  (abs (div (snd x) 60))
     r = concat [show t,h,":",m]
-
-formatTimx :: UTCTime -> String
-formatTimx u = (take 15) $ ftime "%T%0Q" u
 
 formatJul :: UTCTime -> String
 formatJul  = ftime "%Y.%j"
