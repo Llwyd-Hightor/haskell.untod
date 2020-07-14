@@ -33,7 +33,7 @@ formatZone t s = r where
     r = concat [show t,h,":",m]
 
 formatTimx :: UTCTime -> String
-formatTimx u = (take 15) $ ftime "%T%Q000000" u
+formatTimx u = ftime "%T%0Q" u
 
 formatJul :: UTCTime -> String
 formatJul  = ftime "%Y.%j"
