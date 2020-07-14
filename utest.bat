@@ -4,7 +4,7 @@ SET RUNT="D:\Development\Rust\untod\target\release\untod.exe"
 ECHO ======================================================================================================
 SET UNTOD_LZONE=0
 SET UNTOD_AZONE=0
-SET PARM=--csv D1E0D6A173CC0
+SET PARM=-a D1E0D6A173CC0
 STACK exec UNTOD -- --headers %PARM%%
 %RUNT% %PARM%
 STACK exec UNTOD -- -l %PARM%%

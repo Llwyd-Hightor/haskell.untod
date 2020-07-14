@@ -10,11 +10,11 @@ module Untod.Data (
 data RunMode = TOD | DATE | PMC | UNIX | CSEC
       deriving Eq
 instance Show RunMode where
-      show TOD  = "<== TOD"
-      show DATE = "<== Date/Time"
-      show PMC  = "<== Perpetual Minute Clock"
-      show UNIX = "<== UNIX Seconds"
-      show CSEC = "<== 20th Century seconds"
+      show TOD  = " <== TOD"
+      show DATE = " <== Date/Time"
+      show PMC  = " <== Perpetual Minute Clock"
+      show UNIX = " <== UNIX Seconds"
+      show CSEC = " <== 20th Century seconds"
 
 data TickMode = UTC | LOR | TAI
       deriving Eq
