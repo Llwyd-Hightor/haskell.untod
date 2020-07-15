@@ -10,7 +10,7 @@ convZone Nothing = Nothing
 convZone (Just s) = convhelper (readMaybe s :: Maybe Float)
 convhelper :: Maybe Float -> Maybe Int
 convhelper Nothing = Nothing
-convhelper (Just f)  = Just $ int $ 60 * f  
+convhelper (Just f)  = Just $ int $ 3600 * f  
 
 buildZlist :: Uargs -> Uwork -> [Int]
 buildZlist a w = zgmt ++ zlocal ++ zaltern where
@@ -38,40 +38,10 @@ buildlocal Nothing (Just e) _ _ = [e]
 buildlocal (Just p) _ _ [a]
       | p' == a = []
       | otherwise = [p'] where
-            p' = int $ 60 * p :: Int
+            p' = int $ 3600 * p :: Int
 buildlocal (Just p) _ _ _ = [int $ 3600 * p]
 
 buildaltern :: Maybe Float -> Maybe Int -> [Int]
 buildaltern Nothing Nothing = []
 buildaltern Nothing (Just o) = [o]
 buildaltern (Just o) _ = [int $ 3600 * o]
-
--- zoneOffsets :: Uargs -> [Maybe Int, Maybe Int, Maybe Int]
--- zoneOffsets x = map ($ x) [zonegmt, zoneLocal, zoneAlt]
-
--- zonegmt :: Uargs -> Maybe Int
--- zonegmt x = return Just 0
-
--- zoneLocal :: Uargs -> Maybe Int
--- zoneLocal x = getZone (lzone x) "UNTOD_LZONE" utLocal
-
--- zoneAlt :: Uargs -> IO Maybe Int
--- zoneAlt x = getZone (azone x) "UNTOD_AZONE" utnone
-
--- getZone :: Maybe Int -> String -> IO Maybe Int -> IO Maybe Int
--- getzone None env default = getzonee env default
--- getzone Just x = result where
---       result <- Just $ 60 * x
-
--- getZoneE :: String -> IO Maybe Int -> IO Maybe Int
--- getZoneE env default = do
---       let ez = lookupEnv env
---       let result =
-
-
--- main :: IO ()
--- main = do
---       let process =<< execParser utOpts
-
--- process :: Uargs -> IO ()
--- process (s) = print s

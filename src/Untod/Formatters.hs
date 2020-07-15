@@ -22,11 +22,11 @@ formatTod t z = concat [a," ",b," ",c,"---",z] where
     b = take 8 $ drop 3 s
     c = drop 11 s
 
-formatDatx :: UTCTime -> String
-formatDatx  = ftime "%F"
+formatYMD :: UTCTime -> String
+formatYMD  = ftime "%F"
 
-formatTimx :: UTCTime -> String
-formatTimx u = take 15 $ ftime "%T%0Q" u
+formatHMS :: UTCTime -> String
+formatHMS u = take 15 $ ftime "%T%0Q" u
 
 formatZone :: TickMode -> Int -> String
 formatZone t s = r where

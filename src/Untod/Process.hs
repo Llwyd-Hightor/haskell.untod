@@ -67,8 +67,8 @@ processFromTOD  v a w z = r where
         , rday, rpmc, runix, rleap ]
        ++ rnote
     rtod  = formatTod itod (tSep w)
-    rdate = formatDatx xdate
-    rtime = formatTimx xdate
+    rdate = formatYMD xdate
+    rtime = formatHMS xdate
     rjul  = formatJul xdate
     rzone = formatZone (tickmode a) z
     rday  = formatDay xdate
@@ -96,8 +96,8 @@ processFromDATE v a w z = r where
         , rday, rpmc, runix, rleap ]
        ++ rnote
     rtod = formatTod ltod (tSep w)
-    rdate = formatDatx $ fromJust xdate
-    rtime = formatTimx $ fromJust xdate
+    rdate = formatYMD $ fromJust xdate
+    rtime = formatHMS $ fromJust xdate
     rjul  = formatJul  $ fromJust xdate
     rzone = formatZone (tickmode a) z
     rday  = formatDay  $ fromJust xdate
@@ -113,44 +113,35 @@ processFromDATE v a w z = r where
     udiff = fromIntegral $ lsec - tAdj w
     lsec = lsSearchByDay (tickmode a) (utctDay udate)
 
-processFromPMC  :: String -> Uargs -> Uwork -> Int -> String
-processFromPMC  v a w z = r where
-    r = if isNothing xpmc
+processFromPMC :: String -> Uargs -> Uwork -> Int -> String
+processFromPMC v a w z = r where
+    r = if isNothing inval
       then
-          v ++ " is not a recognisable unsigned hex PMC"
+          v ++ " is not valid whatever!"
       else
         joinRow (rSep w)
         [ rtod, rdate, rtime, rzone, rjul
         , rday, rpmc, runix, rleap ]
        ++ rnote
-    rtod = formatTod ttod (tSep w)
-    rdate = formatDatx tdate
-    rtime = formatTimx tdate
-    rjul  = formatJul  tdate
+    inval = getpmc v  
+    pmin = fromJust inval
+    psec = 60 * pmin
+    dsec = (psec +) $ round ptDelta
+    tsec = dsec - toInteger (z + tAdj w)
+    rsec = tsec + toInteger lsec - round utDelta
+    lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
+    -- tdiff = toInteger $ z + tAdj w
+    rtod  = formatTod  (1000000 * (tsec + toInteger lsec)) (tSep w)
+    rdate = formatYMD  ldate
+    rtime = formatHMS  ldate
+    rjul  = formatJul  ldate
+    ldate = addUTCTime (fromIntegral dsec) tBase 
+    rday  = formatDay  ldate
     rzone = formatZone (tickmode a) z
-    rday  = formatDay  tdate
-    rpmc  = formatPmc  xpmc
-    runix = formatUnix (csv a) $ calcUnix z tdate
+    rpmc  = formatPmc  $ fixPmc pmin
+    runix = formatUnix (csv a) rsec
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
-    xpmc = getpmc v
-    pmin = fromJust xpmc
-    psec = 60 * pmin
-    tsec = (psec +) $ round ptDelta
-    lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
-    tdiff = toInteger $ z + tAdj w
-    tdate = addUTCTime (fromIntegral $ tsec - tdiff) tBase 
-    ttod = 1000000 * (tsec - tdiff)
-    -- pdiff = fromIntegral $ psec + (toInteger $ z + lsec + (tAdj w))
-    -- pdiff = fromIntegral $ psec + (toInteger $ z )
-    -- usec = psec
-    -- pdate = addUTCTime pdiff pBase
-    -- ldate = addUTCTime udiff pdate
-    -- ltod = round $ (1000000 *) $ diffUTCTime ldate tBase
-    -- ltod = undefined :: Integer
-    -- ltod = floor $ 1000000 * (properFraction $ diffUTCTime ldate tBase)
-    -- ldiff = fromIntegral $ lsec - (tAdj w) - z
-    -- udiff = fromIntegral $ lsec - (tAdj w)
 
 getdate :: String -> Maybe UTCTime
 getdate s = if isNothing d
@@ -169,10 +160,12 @@ calcUnix :: Int -> UTCTime -> Integer
 calcUnix z t = toInteger $ (z +) $ fromInteger $ floor $ diffUTCTime t uBase
 
 calcPmc :: Int -> UTCTime -> Maybe Integer
-calcPmc z t = r where
+calcPmc z t = fixPmc x where
     x = toInteger $ (z +) $ floor $ diffUTCTime t pBase
-    r = if x >= 0 && x < 2^64
-        then Just $ div x 60
+
+fixPmc :: Integer -> Maybe Integer
+fixPmc i = if i >= 0 && i < 2^64
+        then Just i
         else Nothing
 
 ptime :: String -> String -> Maybe UTCTime
@@ -191,10 +184,39 @@ joinR :: String -> [String] -> String
 joinR  _ [] =  []
 joinR d (s:ss) = s ++ d ++ joinR d ss
 
--- joinRow :: Bool -> [String] -> String
--- joinRow a s = init $ joinR a s
+-- ======================================================================
+-- Process From Template
+-- ======================================================================
+processFromXyz :: String -> Uargs -> Uwork -> Int -> String
+processFromXyz v a w z = r where
+    r = if isNothing inval
+      then
+          idata ++ " is not valid whatever!"
+      else
+        joinRow (rSep w)
+        [ rtod, rdate, rtime, rzone, rjul
+        , rday, rpmc, runix, rleap ]
+       ++ rnote
+    idata = deriveId v  
+    inval = deriveIn idata  
+    rtod  = deriveTod  undefined
+    rdate = deriveYMD  undefined
+    rtime = deriveHMS  undefined
+    rjul  = deriveJul  undefined
+    rzone = formatZone (tickmode a) z
+    rday  = deriveDay  undefined
+    rpmc  = derivePmc  undefined
+    runix = deriveUnix undefined
+    rleap = deriveLsec undefined
+    rnote = formatAnnot a
 
--- joinR :: Bool -> [String] -> String
--- joinR  a [] =  []
--- joinR a (s:ss) = s ++ d ++ joinR a ss where
---     d = if a then "," else " "
+    deriveId   = undefined
+    deriveIn   = undefined
+    deriveTod  = undefined
+    deriveYMD  = undefined
+    deriveHMS  = undefined
+    deriveJul  = undefined
+    deriveDay  = undefined
+    derivePmc  = undefined
+    deriveUnix = undefined
+    deriveLsec = undefined

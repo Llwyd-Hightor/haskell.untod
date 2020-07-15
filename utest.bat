@@ -2,18 +2,20 @@
 CLS
 SET RUNT="D:\Development\Rust\untod\target\release\untod.exe"
 SET RUNS=STACK exec UNTOD -- -a
+ECHO ======================================================================================================
 %RUNS% --vv 
 ECHO ======================================================================================================
-SET UNTOD_LZONE=0
-SET UNTOD_AZONE=
-SET PARM=-m 01200edf
+SET UNTOD_LZONE=1
+SET UNTOD_AZONE=-4
+SET PARM=-m 01AD76F3
+
 %RUNS% %PARM% 
 %RUNT% %PARM% 
-%RUNS% -l %PARM% 
-%RUNT% -l %PARM% 
-%RUNS% -t %PARM% 
-%RUNT% -t %PARM% 
 ECHO ======================================================================================================
+REM %RUNS% -l %PARM% 
+REM %RUNT% -l %PARM% 
+REM %RUNS% -t %PARM% 
+REM %RUNT% -t %PARM% 
 REM %RUNS% %PARM% 2
 REM %RUNS% %PARM% 2020
 REM %RUNS% %PARM% 2020-
