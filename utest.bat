@@ -2,6 +2,7 @@
 CLS
 SET RUNT="D:\Development\Rust\untod\target\release\untod.exe"
 SET RUNS=STACK exec UNTOD -- -a
+%RUNS% --vv 
 ECHO ======================================================================================================
 SET UNTOD_LZONE=0
 SET UNTOD_AZONE=

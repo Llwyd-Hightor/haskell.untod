@@ -24,9 +24,8 @@ import Control.DeepSeq
 getInput :: Maybe String -> IO [String]
 getInput Nothing = do
     return []
-getInput (Just "-") = do
-        contents <- getContents
-        return $ words contents
+getInput (Just "-") = do words <$> getContents
+
 getInput (Just s) = do
     isthere <- doesFileExist s
     if isthere then do
@@ -37,10 +36,10 @@ getInput (Just s) = do
     else do
         return []
 
-getClip :: ( Bool, Maybe String ) -> [String]
-getClip (False, _)      = []
-getClip (True, Nothing) = []
-getClip (True, Just s)  = words s
+getClip :: Bool -> Maybe String -> [String]
+getClip False _      = []
+getClip True Nothing = []
+getClip True (Just s)  = words s
 
 fPrin :: [String] -> IO ()
 fPrin [] = return ()
@@ -54,7 +53,7 @@ main = do
 
     aEnvZone <- lookupEnv "UNTOD_AZONE"
     lEnvZone <- lookupEnv "UNTOD_LZONE"
-    lSysZone <- (liftA timeZoneMinutes getCurrentTimeZone)
+    lSysZone <- fmap timeZoneMinutes getCurrentTimeZone
     utClip   <- getClipboardString 
     utInput  <- getInput $ input options
     utNow    <- getCurrentTime
@@ -63,13 +62,13 @@ main = do
       aEnvZone = convZone aEnvZone
     , lEnvZone = convZone lEnvZone
     , lSysZone = lSysZone * 60
-    , uInput   = (alist options) 
-                ++ (getClip ((clip options), utClip))
+    , uInput   = alist options
+                ++ getClip (clip options) utClip
                 ++ utInput
-    , uNow     = (take 27) $ ftime "%F@%T%Q" utNow
-    , tSep     = if (csv options) then [] else " :"
-    , rSep     = if (csv options) then "," else " "
-    , tAdj     = if (tickmode options == TAI) then 10 else 0
+    , uNow     = take 27 $ ftime "%F@%T%Q" utNow
+    , tSep     = if csv options then [] else " :"
+    , rSep     = if csv options then "," else " "
+    , tAdj     = if tickmode options == TAI then 10 else 0
     }
 
     let zList = buildZlist options utwork

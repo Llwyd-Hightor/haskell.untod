@@ -43,8 +43,8 @@ processData (v:vs) a w z =
 processZones :: String -> Uargs -> Uwork -> [Int] -> [String]
 processZones [] _ _ _ = []
 processZones v a w (z:zs) =
-    ( processOne v a w z ) ++
-    ( processZones v a w zs )
+    processOne v a w z ++
+    processZones v a w zs
 processZones _ _ _ _ = []
 
 processOne :: String -> Uargs -> Uwork -> Int -> [String]
@@ -58,13 +58,13 @@ processOne v a w z = [result] where
 
 processFromTOD  :: String -> Uargs -> Uwork -> Int -> String
 processFromTOD  v a w z = r where
-    r = if xtod == Nothing
+    r = if isNothing xtod
       then
           ptod ++ " is not valid hexadecimal"
       else
-        ( joinRow (rSep w)
+        joinRow (rSep w)
         [ rtod, rdate, rtime, rzone, rjul
-        , rday, rpmc, runix, rleap ])
+        , rday, rpmc, runix, rleap ]
        ++ rnote
     rtod  = formatTod itod (tSep w)
     rdate = formatDatx xdate
@@ -73,27 +73,27 @@ processFromTOD  v a w z = r where
     rzone = formatZone (tickmode a) z
     rday  = formatDay xdate
     rpmc  = formatPmc $ calcPmc z xdate
-    runix = (formatUnix (csv a)) $ calcUnix 0 udate
+    runix = formatUnix (csv a) $ calcUnix 0 udate
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
     xtod = readMaybe ("0x" ++ ptod) :: Maybe Integer
     itod = fromJust xtod
     ptod = padTod (padmode a) v
     lsec = lsSearchByTOD (tickmode a) itod
-    tdiff = fromIntegral $ lsec - (tAdj w) - z
-    udiff = fromIntegral $ lsec - (tAdj w)
-    xdate = addUTCTime (0.000001 * (fromIntegral itod) - tdiff) tBase
-    udate = addUTCTime (0.000001 * (fromIntegral itod) - udiff) tBase
+    tdiff = fromIntegral $ lsec - tAdj w - z
+    udiff = fromIntegral $ lsec - tAdj w
+    xdate = addUTCTime (0.000001 * fromIntegral itod - tdiff) tBase
+    udate = addUTCTime (0.000001 * fromIntegral itod - udiff) tBase
 
 processFromDATE :: String -> Uargs -> Uwork -> Int -> String
 processFromDATE v a w z = r where
-    r = if xdate == Nothing
+    r = if isNothing xdate
       then
           v ++ " is not a recognisable date/time"
       else
-        ( joinRow (rSep w)
+        joinRow (rSep w)
         [ rtod, rdate, rtime, rzone, rjul
-        , rday, rpmc, runix, rleap ])
+        , rday, rpmc, runix, rleap ]
        ++ rnote
     rtod = formatTod ltod (tSep w)
     rdate = formatDatx $ fromJust xdate
@@ -102,26 +102,26 @@ processFromDATE v a w z = r where
     rzone = formatZone (tickmode a) z
     rday  = formatDay  $ fromJust xdate
     rpmc  = formatPmc  $ calcPmc z udate
-    runix = (formatUnix (csv a)) $ calcUnix z udate
+    runix = formatUnix (csv a) $ calcUnix z udate
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
     xdate = getdate v
     udate = fromJust xdate
     tdate = addUTCTime ldiff udate
     ltod = round $ (1000000 *) $ diffUTCTime tdate tBase
-    ldiff = fromIntegral $ lsec - (tAdj w) - z
-    udiff = fromIntegral $ lsec - (tAdj w)
+    ldiff = fromIntegral $ lsec - tAdj w - z
+    udiff = fromIntegral $ lsec - tAdj w
     lsec = lsSearchByDay (tickmode a) (utctDay udate)
 
 processFromPMC  :: String -> Uargs -> Uwork -> Int -> String
 processFromPMC  v a w z = r where
-    r = if xpmc == Nothing
+    r = if isNothing xpmc
       then
           v ++ " is not a recognisable unsigned hex PMC"
       else
-        ( joinRow (rSep w)
+        joinRow (rSep w)
         [ rtod, rdate, rtime, rzone, rjul
-        , rday, rpmc, runix, rleap ])
+        , rday, rpmc, runix, rleap ]
        ++ rnote
     rtod = formatTod ttod (tSep w)
     rdate = formatDatx tdate
@@ -129,8 +129,8 @@ processFromPMC  v a w z = r where
     rjul  = formatJul  tdate
     rzone = formatZone (tickmode a) z
     rday  = formatDay  tdate
-    rpmc  = formatPmc  $ xpmc
-    runix = (formatUnix (csv a)) $ calcUnix z tdate
+    rpmc  = formatPmc  xpmc
+    runix = formatUnix (csv a) $ calcUnix z tdate
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
     xpmc = getpmc v
@@ -138,7 +138,7 @@ processFromPMC  v a w z = r where
     psec = 60 * pmin
     tsec = (psec +) $ round ptDelta
     lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
-    tdiff = toInteger $ z + (tAdj w)
+    tdiff = toInteger $ z + tAdj w
     tdate = addUTCTime (fromIntegral $ tsec - tdiff) tBase 
     ttod = 1000000 * (tsec - tdiff)
     -- pdiff = fromIntegral $ psec + (toInteger $ z + lsec + (tAdj w))
@@ -153,7 +153,7 @@ processFromPMC  v a w z = r where
     -- udiff = fromIntegral $ lsec - (tAdj w)
 
 getdate :: String -> Maybe UTCTime
-getdate s = if d == Nothing
+getdate s = if isNothing d
     then ptime "%Y.%j@%T%Q" j
     else d where
         t = s ++ drop (length s) "1900-01-01@00:00:00.000000000"
