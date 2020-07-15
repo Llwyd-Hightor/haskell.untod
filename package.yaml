@@ -1,0 +1,64 @@
+name:                untod
+version:             0.1.0.0
+github:              "longborough/untod"
+license:             BSD3
+license-file:        LICENSE
+author:              "Brent Longborough"
+maintainer:          "brent@llwyd-consulting.cymru"
+copyright:           "Copyright (c) 2020 Brent Longborough"
+build-type:     Simple
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+
+synopsis:            A Swiss Army knife for TOD and other clocks
+category:            Utility
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/longborough/untod#readme>
+
+dependencies:
+- base >=4.7 && <5
+- optparse-applicative >= 0.15.1.0
+- githash >= 0.1.4.0
+- time
+# - untod
+- deepseq
+- Clipboard
+
+# library:
+#   source-dirs: src
+
+executables:
+  untod:
+    main:                Main.hs
+    source-dirs:         src
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    # - untod
+    - base >=4.7 && <5
+    - optparse-applicative >= 0.15.1.0
+    - githash >= 0.1.4.0
+    - time
+    - directory
+    # - untod
+    - deepseq
+    - Clipboard
+
+tests:
+  untod-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - untod
