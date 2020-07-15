@@ -19,7 +19,7 @@ utargs = Uargs
             <> help "Convert from Date/Time" )
         <|> flag' PMC
           ( long "pmc"
-            <> short 'p'
+            <> short 'm'
             <> help "Convert from PMC" )
         <|> flag' UNIX
           ( long "unix"

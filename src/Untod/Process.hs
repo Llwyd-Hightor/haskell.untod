@@ -28,17 +28,17 @@ utDelta = diffUTCTime uBase tBase
 
 processAll :: [String] -> Uargs -> Uwork -> [Int] -> [String]
 processAll [] a w z
-    | (runmode a) == DATE = processAll [uNow w] a w z
+    | runmode a == DATE = processAll [uNow w] a w z
     | otherwise = ["No data provided"]
 processAll l a w z =
-    ( headerList (headers a) (csv a) ) ++
-    ( processData l a w z)
+    formatHeaders (headers a) (csv a) ++
+    processData l a w z
 
 processData :: [String] -> Uargs -> Uwork -> [Int] -> [String]
 processData [] _ _ _ = []
 processData (v:vs) a w z =
-    ( processZones v a w z ) ++
-    ( processData vs a w z )
+    processZones v a w z ++
+    processData vs a w z
 
 processZones :: String -> Uargs -> Uwork -> [Int] -> [String]
 processZones [] _ _ _ = []
@@ -85,16 +85,6 @@ processFromTOD  v a w z = r where
     xdate = addUTCTime (0.000001 * (fromIntegral itod) - tdiff) tBase
     udate = addUTCTime (0.000001 * (fromIntegral itod) - udiff) tBase
 
-calcUnix :: Int -> UTCTime -> Integer
-calcUnix z t = toInteger $ (z +) $ fromInteger $ floor $ diffUTCTime t uBase
-
-calcPmc :: Int -> UTCTime -> Maybe Integer
-calcPmc z t = r where
-    x = toInteger $ (z +) $ floor $ diffUTCTime t pBase
-    r = if x >= 0 && x < 2^64
-        then Just $ div x 60
-        else Nothing
-
 processFromDATE :: String -> Uargs -> Uwork -> Int -> String
 processFromDATE v a w z = r where
     r = if xdate == Nothing
@@ -111,7 +101,7 @@ processFromDATE v a w z = r where
     rjul  = formatJul  $ fromJust xdate
     rzone = formatZone (tickmode a) z
     rday  = formatDay  $ fromJust xdate
-    rpmc  = formatPmc  $ calcPmc z udate 
+    rpmc  = formatPmc  $ calcPmc z udate
     runix = (formatUnix (csv a)) $ calcUnix z udate
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
@@ -123,6 +113,45 @@ processFromDATE v a w z = r where
     udiff = fromIntegral $ lsec - (tAdj w)
     lsec = lsSearchByDay (tickmode a) (utctDay udate)
 
+processFromPMC  :: String -> Uargs -> Uwork -> Int -> String
+processFromPMC  v a w z = r where
+    r = if xpmc == Nothing
+      then
+          v ++ " is not a recognisable unsigned hex PMC"
+      else
+        ( joinRow (rSep w)
+        [ rtod, rdate, rtime, rzone, rjul
+        , rday, rpmc, runix, rleap ])
+       ++ rnote
+    rtod = formatTod ttod (tSep w)
+    rdate = formatDatx tdate
+    rtime = formatTimx tdate
+    rjul  = formatJul  tdate
+    rzone = formatZone (tickmode a) z
+    rday  = formatDay  tdate
+    rpmc  = formatPmc  $ xpmc
+    runix = (formatUnix (csv a)) $ calcUnix z tdate
+    rleap = formatLsec (csv a) (tickmode a) lsec
+    rnote = formatAnnot a
+    xpmc = getpmc v
+    pmin = fromJust xpmc
+    psec = 60 * pmin
+    tsec = (psec +) $ round ptDelta
+    lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
+    tdiff = toInteger $ z + (tAdj w)
+    tdate = addUTCTime (fromIntegral $ tsec - tdiff) tBase 
+    ttod = 1000000 * (tsec - tdiff)
+    -- pdiff = fromIntegral $ psec + (toInteger $ z + lsec + (tAdj w))
+    -- pdiff = fromIntegral $ psec + (toInteger $ z )
+    -- usec = psec
+    -- pdate = addUTCTime pdiff pBase
+    -- ldate = addUTCTime udiff pdate
+    -- ltod = round $ (1000000 *) $ diffUTCTime ldate tBase
+    -- ltod = undefined :: Integer
+    -- ltod = floor $ 1000000 * (properFraction $ diffUTCTime ldate tBase)
+    -- ldiff = fromIntegral $ lsec - (tAdj w) - z
+    -- udiff = fromIntegral $ lsec - (tAdj w)
+
 getdate :: String -> Maybe UTCTime
 getdate s = if d == Nothing
     then ptime "%Y.%j@%T%Q" j
@@ -131,17 +160,23 @@ getdate s = if d == Nothing
         j = s ++ drop (length s) "1900.001@00:00:00.000000000"
         d = ptime "%F@%T%Q" t
 
-tryjulian :: String -> Maybe UTCTime
-tryjulian s = if d == Nothing
-    then ptime "%Y.%j" s
-    else d where
-        d  = ptime "%Y-%m" (take 7 s)
+getpmc :: String -> Maybe Integer
+getpmc [] = Nothing
+getpmc ('-':ss) = Nothing
+getpmc s = readMaybe ("0x" ++ s) :: Maybe Integer
+
+calcUnix :: Int -> UTCTime -> Integer
+calcUnix z t = toInteger $ (z +) $ fromInteger $ floor $ diffUTCTime t uBase
+
+calcPmc :: Int -> UTCTime -> Maybe Integer
+calcPmc z t = r where
+    x = toInteger $ (z +) $ floor $ diffUTCTime t pBase
+    r = if x >= 0 && x < 2^64
+        then Just $ div x 60
+        else Nothing
 
 ptime :: String -> String -> Maybe UTCTime
 ptime = parseTimeM False defaultTimeLocale
-
-processFromPMC  :: String -> Uargs -> Uwork -> Int -> String
-processFromPMC  v a w z = undefined
 
 processFromUNIX :: String -> Uargs -> Uwork -> Int -> String
 processFromUNIX v a w z = undefined

@@ -12,9 +12,9 @@ data RunMode = TOD | DATE | PMC | UNIX | CSEC
 instance Show RunMode where
       show TOD  = " <== TOD"
       show DATE = " <== Date/Time"
-      show PMC  = " <== Perpetual Minute Clock"
-      show UNIX = " <== UNIX Seconds"
-      show CSEC = " <== 20th Century seconds"
+      show PMC  = " <== PMC"
+      show UNIX = " <== UNIX"
+      show CSEC = " <== 20th Csec"
 
 data TickMode = UTC | LOR | TAI
       deriving Eq

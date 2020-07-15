@@ -12,6 +12,7 @@ data LeapSec = LeapSec {
        count :: Int
 } deriving Show
 
+leapSecTable :: [LeapSec]
 leapSecTable = [
       LeapSec (fromGregorian 2017 1 1) 0x000D1E0D68173CC0 27
     , LeapSec (fromGregorian 2015 7 1) 0x000CF2D54B4FBA80 26
@@ -46,9 +47,9 @@ leapSecTable = [
 lsSearchByDay:: TickMode -> Day -> Int
 lsSearchByDay UTC d = count ls where
       ls = head $ filter (\x -> d >= day x) leapSecTable
-lsSearchByDay _ d = 0
+lsSearchByDay _ _ = 0
 
 lsSearchByTOD:: TickMode -> Integer -> Int
 lsSearchByTOD UTC d = count ls where
       ls = head $ filter (\x -> d >= tod x) leapSecTable
-lsSearchByTOD _ d = 0
+lsSearchByTOD _ _ = 0
