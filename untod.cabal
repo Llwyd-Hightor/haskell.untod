@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c993b2887e63790c18761a3077b13628c51597214beab3ecf5f00963b0b2d933
+-- hash: d391ebe11bcc27460ee47bde1a1790d7a21abd9108bf0d9677d438186473277b
 
 name:           untod
 version:        0.1.0.0
@@ -36,6 +36,7 @@ executable untod
       Untod.Formatters
       Untod.LeapSecTab
       Untod.Process
+      Untod.Utils
       Untod.Version
       Untod.Zones
       Paths_untod

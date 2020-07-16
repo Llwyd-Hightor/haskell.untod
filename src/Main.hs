@@ -75,7 +75,7 @@ main = do
 
     -- print options 
     -- print utwork 
-    print zList 
+    -- print zList 
     fPrin (processAll (uInput utwork) options utwork zList)
     -- print utClip
     -- print (uClip utwork)
