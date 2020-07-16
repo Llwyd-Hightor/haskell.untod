@@ -22,9 +22,8 @@ import System.IO
 import Control.DeepSeq
 
 getInput :: Maybe String -> IO [String]
-getInput Nothing = do
-    return []
-getInput (Just "-") = do words <$> getContents
+getInput Nothing = return []
+getInput (Just "-") = words <$> getContents
 
 getInput (Just s) = do
     isthere <- doesFileExist s
@@ -33,8 +32,7 @@ getInput (Just s) = do
         contents <- hGetContents handle
         contents `deepseq` hClose handle
         return $ words contents
-    else do
-        return []
+    else return []
 
 getClip :: Bool -> Maybe String -> [String]
 getClip False _      = []

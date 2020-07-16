@@ -1,6 +1,7 @@
 module Untod.LeapSecTab (
     lsSearchByDay
   , lsSearchByTOD
+  , leapSecTable
   ) where
 
 import Untod.Data
@@ -66,7 +67,10 @@ lsSearchByTOD _ _ = 0
 
 lsSearchByTOD' :: Integer -> Int -> Int
 lsSearchByTOD' d l = r where
-      x = count $ head $ filter (\x -> (d + toInteger l) >= tod x) leapSecTable
+      x = count $ head $ filter (\z -> tryls z d l) leapSecTable
       r = if l == x
             then l
             else lsSearchByTOD' d x
+
+tryls :: LeapSec -> Integer -> Int -> Bool 
+tryls z d l = (d + toInteger l) >= tod z - 1000000 * toInteger (count z)

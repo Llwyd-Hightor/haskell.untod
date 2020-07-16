@@ -150,7 +150,7 @@ processFromUNIX v a w z = r where
     vsec  = fromJust inval
     tsec = vsec + toInteger (z + tAdj w)
     udate = addUTCTime (fromIntegral $ vsec + toInteger z) uBase 
-    lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
+    lsec = lsSearchByTOD (tickmode a) (1000000 * (tsec + round utDelta))
     rtod  = formatTod (1000000 * (tsec + toInteger lsec)) (tSep w)
     rdate = formatYMD udate
     rtime = formatHMS udate
@@ -162,16 +162,6 @@ processFromUNIX v a w z = r where
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
 
-    deriveId   = undefined
-    deriveIn   = undefined
-    deriveTod  = undefined
-    deriveYMD  = undefined
-    deriveHMS  = undefined
-    deriveJul  = undefined
-    deriveDay  = undefined
-    derivePmc  = undefined
-    deriveUnix = undefined
-    deriveLsec = undefined
 -- =======================================================================
 processFromCSEC :: String -> Uargs -> Uwork -> Int -> String
 processFromCSEC v a w z = undefined
@@ -205,7 +195,8 @@ calcUnix z t =
 
 calcPmc :: Int -> UTCTime -> Maybe Integer
 calcPmc z t = fixPmc x where
-    x = toInteger $ (z +) $ floor $ diffUTCTime t pBase
+    -- x = toInteger (((z +) $ floor $ diffUTCTime t pBase) / 60)
+    x = quot (toInteger (z + floor (diffUTCTime t pBase))) 60
 
 fixPmc :: Integer -> Maybe Integer
 fixPmc i = if i >= 0 && i < 2^64
