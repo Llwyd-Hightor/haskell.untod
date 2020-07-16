@@ -21,9 +21,9 @@ import System.Directory
 import System.IO
 import Control.DeepSeq
 
-getInput :: Maybe String -> IO [String]
+getInput :: Maybe String -> IO String
 getInput Nothing = return []
-getInput (Just "-") = words <$> getContents
+getInput (Just "-") = getContents
 
 getInput (Just s) = do
     isthere <- doesFileExist s
@@ -31,13 +31,20 @@ getInput (Just s) = do
         handle <- openFile s ReadMode
         contents <- hGetContents handle
         contents `deepseq` hClose handle
-        return $ words contents
+        return contents
     else return []
 
-getClip :: Bool -> Maybe String -> [String]
+getClip :: Bool -> Maybe String -> String
 getClip False _      = []
 getClip True Nothing = []
-getClip True (Just s)  = words s
+getClip True (Just s)  = s
+
+wnocomment :: String -> [String]
+wnocomment s = filter (\x -> '#' /= head x) (lines s)
+
+flatlines :: [String] -> [String]
+flatlines [] = []
+flatlines s = concatMap words s 
 
 fPrin :: [String] -> IO ()
 fPrin [] = return ()
@@ -61,8 +68,8 @@ main = do
     , lEnvZone = convZone lEnvZone
     , lSysZone = lSysZone * 60
     , uInput   = alist options
-                ++ getClip (clip options) utClip
-                ++ utInput
+                ++ flatlines (wnocomment (getClip (clip options) utClip))
+                ++ flatlines (wnocomment utInput)
     , uNow     = take 27 $ ftime "%F@%T%Q" utNow
     , tSep     = if csv options then [] else " :"
     , rSep     = if csv options then "," else " "

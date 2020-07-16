@@ -138,16 +138,34 @@ processFromUNIX :: String -> Uargs -> Uwork -> Int -> String
 processFromUNIX v a w z = r where
     r = if isNothing inval
         then
-            idata ++ " is not valid Unix clock value"
+            idata ++ " is not a valid Unix clock value"
         else
-            joinRow (rSep w)
-            [ rtod, rdate, rtime, rzone, rjul
-            , rday, rpmc, runix, rleap ]
-        ++ rnote
-
+            processfromcoru v a w z vsec
     idata = v  
     inval = getunix idata  
     vsec  = fromJust inval
+
+-- =======================================================================
+processFromCSEC :: String -> Uargs -> Uwork -> Int -> String
+processFromCSEC v a w z = r where
+    r = if isNothing inval
+        then
+            idata ++ " is not valid unsigned seconds value"
+        else
+            processfromcoru v a w z vsec
+    idata = v  
+    inval = getcsec idata  
+    vsec  = fromJust inval - floor utDelta
+
+-- =======================================================================
+-- =======================================================================
+processfromcoru :: String -> Uargs -> Uwork -> Int -> Integer -> String
+processfromcoru v a w z vsec = r where
+    r = joinRow (rSep w)
+        [ rtod, rdate, rtime, rzone, rjul
+        , rday, rpmc, runix, rleap ]
+        ++ rnote
+
     tsec = vsec + toInteger (z + tAdj w)
     udate = addUTCTime (fromIntegral $ vsec + toInteger z) uBase 
     lsec = lsSearchByTOD (tickmode a) (1000000 * (tsec + round utDelta))
@@ -161,11 +179,6 @@ processFromUNIX v a w z = r where
     runix = formatUnix (csv a) vsec
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
-
--- =======================================================================
-processFromCSEC :: String -> Uargs -> Uwork -> Int -> String
-processFromCSEC v a w z = undefined
--- =======================================================================
 -- =======================================================================
 getdate :: String -> Maybe UTCTime
 getdate s = if isNothing d
@@ -179,6 +192,11 @@ getpmc :: String -> Maybe Integer
 getpmc [] = Nothing
 getpmc ('-':ss) = Nothing
 getpmc s = readMaybe ("0x" ++ s) :: Maybe Integer
+
+getcsec :: String -> Maybe Integer
+getcsec [] = Nothing
+getcsec ('-':ss) = Nothing
+getcsec s = readMaybe s :: Maybe Integer
 
 getunix :: String -> Maybe Integer
 getunix [] = Nothing
