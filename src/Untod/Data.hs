@@ -54,4 +54,5 @@ data Uargs = Uargs {
   , lzone    :: Maybe Float  -- Override local time zone
   , azone    :: Maybe Float  -- Provide one additional timezone
   , alist    :: [String]     -- Value parameter list from command line
+  , vvdisp   :: Int          -- Version flag(s)
   } deriving Show

@@ -89,14 +89,21 @@ utargs = Uargs
             (  metavar "<value...>"
             <> help "Values for conversion" )
             )
+      <*>   ( length <$> many 
+              (flag' ()
+                (long "version" <> short 'v' <> help "Show version")
+              )
+            )
 
-vOpts = infoOption utVstring 
-    (long "version" <> short 'v' <> help "Show version")
 
-vOgit = infoOption utGitmax 
-    (long "vv" <> help "Show commit information")
+-- vOpts = infoOption utVstring 
+--     (long "version" <> short 'v' <> help "Show version")
 
-utOpts = info (utargs <**> vOpts <**> vOgit <**> helper)
+-- vOgit = infoOption utGitmax 
+--     (long "vv" <> help "Show commit information")
+
+-- utOpts = info (utargs <**> vOpts <**> vOgit <**> helper)
+utOpts = info (utargs <**> helper)
     ( fullDesc
     <> progDesc ("Converts among TOD, Date/Time, PARS Perpetual Minute Tick," 
     ++ "Unix seconds, and 20th century seconds for UTC, TAI or LORAN/IBM")
