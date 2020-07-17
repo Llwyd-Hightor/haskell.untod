@@ -5,6 +5,7 @@ import Untod.Data
 import Untod.Formatters
 import Untod.Zones
 import Untod.Process
+import Untod.Version
 import Options.Applicative
 import System.Environment (
     lookupEnv
@@ -39,12 +40,11 @@ getClip False _      = []
 getClip True Nothing = []
 getClip True (Just s)  = s
 
-wnocomment :: String -> [String]
-wnocomment s = filter (\x -> '#' /= head x) (lines s)
+nocomment :: String -> [String]
+nocomment s = filter (\x -> '#' /= head x) (lines s)
 
 flatlines :: [String] -> [String]
-flatlines [] = []
-flatlines s = concatMap words s 
+flatlines = concatMap words
 
 fPrin :: [String] -> IO ()
 fPrin [] = return ()
@@ -59,7 +59,7 @@ main = do
     aEnvZone <- lookupEnv "UNTOD_AZONE"
     lEnvZone <- lookupEnv "UNTOD_LZONE"
     lSysZone <- fmap timeZoneMinutes getCurrentTimeZone
-    utClip   <- getClipboardString 
+    utClip   <- getClipboardString
     utInput  <- getInput $ input options
     utNow    <- getCurrentTime
 
@@ -68,8 +68,8 @@ main = do
     , lEnvZone = convZone lEnvZone
     , lSysZone = lSysZone * 60
     , uInput   = alist options
-                ++ flatlines (wnocomment (getClip (clip options) utClip))
-                ++ flatlines (wnocomment utInput)
+                ++ flatlines (nocomment (getClip (clip options) utClip))
+                ++ flatlines (nocomment utInput)
     , uNow     = take 27 $ ftime "%F@%T%Q" utNow
     , tSep     = if csv options then [] else " :"
     , rSep     = if csv options then "," else " "
@@ -78,9 +78,12 @@ main = do
 
     let zList = buildZlist options utwork
 
-    -- print options 
-    -- print utwork 
-    -- print zList 
-    fPrin (processAll (uInput utwork) options utwork zList)
+    -- print options
+    -- print utwork
+    -- print zList
+    case vvdisp options of
+        0 -> fPrin (processAll (uInput utwork) options utwork zList)
+        1 -> fPrin [utVstring]
+        _ -> fPrin [utGitmax]
     -- print utClip
     -- print (uClip utwork)

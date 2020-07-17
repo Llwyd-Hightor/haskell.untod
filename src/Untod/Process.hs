@@ -67,7 +67,7 @@ processFromTOD  v a w z = r where
     runix = formatUnix (csv a) $ calcUnix 0 udate
     rleap = formatLsec (csv a) (tickmode a) lsec
     rnote = formatAnnot a
-    xtod = readMaybe ("0x" ++ ptod) :: Maybe Integer
+    xtod = readMaybe ("0x" ++ ptod) :: Maybe Int
     itod = fromJust xtod
     ptod = padTod (padmode a) v
     lsec = lsSearchByTOD (tickmode a) itod
@@ -114,15 +114,16 @@ processFromPMC v a w z = r where
         [ rtod, rdate, rtime, rzone, rjul
         , rday, rpmc, runix, rleap ]
        ++ rnote
-    inval = getpmc v  
+    inval = getpmc $ padPmc (padmode a) v 
+
     pmin = fromJust inval
     psec = 60 * pmin
     dsec = (psec +) $ round ptDelta
-    tsec = dsec - toInteger (z + tAdj w)
-    rsec = tsec + toInteger lsec - round utDelta
+    tsec = dsec - z + tAdj w
+    rsec = tsec + lsec - round utDelta
     lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
-    -- tdiff = toInteger $ z + tAdj w
-    rtod  = formatTod  (1000000 * (tsec + toInteger lsec)) (tSep w)
+    -- tdiff = toInt $ z + tAdj w
+    rtod  = formatTod  (1000000 * (tsec + lsec)) (tSep w)
     rdate = formatYMD  ldate
     rtime = formatHMS  ldate
     rjul  = formatJul  ldate
@@ -154,22 +155,22 @@ processFromCSEC v a w z = r where
         else
             processfromcoru v a w z vsec
     idata = v  
-    inval = getcsec idata  
+    inval = getcsec idata
     vsec  = fromJust inval - floor utDelta
 
 -- =======================================================================
 -- =======================================================================
-processfromcoru :: String -> Uargs -> Uwork -> Int -> Integer -> String
+processfromcoru :: String -> Uargs -> Uwork -> Int -> Int -> String
 processfromcoru v a w z vsec = r where
     r = joinRow (rSep w)
         [ rtod, rdate, rtime, rzone, rjul
         , rday, rpmc, runix, rleap ]
         ++ rnote
 
-    tsec = vsec + toInteger (z + tAdj w)
-    udate = addUTCTime (fromIntegral $ vsec + toInteger z) uBase 
-    lsec = lsSearchByTOD (tickmode a) (1000000 * (tsec + round utDelta))
-    rtod  = formatTod (1000000 * (tsec + toInteger lsec)) (tSep w)
+    tsec = vsec + (z + tAdj w) + floor utDelta
+    udate = addUTCTime (fromIntegral tsec) tBase 
+    lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
+    rtod  = formatTod (1000000 * (tsec + lsec)) (tSep w)
     rdate = formatYMD udate
     rtime = formatHMS udate
     rjul  = formatJul udate
@@ -188,36 +189,36 @@ getdate s = if isNothing d
         j = s ++ drop (length s) "1900.001@00:00:00.000000000"
         d = ptime "%F@%T%Q" t
 
-getpmc :: String -> Maybe Integer
+getpmc :: String -> Maybe Int
 getpmc [] = Nothing
 getpmc ('-':ss) = Nothing
-getpmc s = readMaybe ("0x" ++ s) :: Maybe Integer
+getpmc s = readMaybe ("0x" ++ s) :: Maybe Int
 
-getcsec :: String -> Maybe Integer
+getcsec :: String -> Maybe Int
 getcsec [] = Nothing
 getcsec ('-':ss) = Nothing
-getcsec s = readMaybe s :: Maybe Integer
+getcsec s = readMaybe s :: Maybe Int
 
-getunix :: String -> Maybe Integer
+getunix :: String -> Maybe Int
 getunix [] = Nothing
 getunix s = r where
-    x = readMaybe s :: Maybe Integer
+    x = readMaybe s :: Maybe Int
     r
       | isNothing x = Nothing
       | (0>) $ fromJust x + round utDelta = Nothing
       | otherwise = x
 
-calcUnix :: Int -> UTCTime -> Integer
+calcUnix :: Int -> UTCTime -> Int
 calcUnix z t = 
-    toInteger $ (z +) $ fromInteger $ floor $ diffUTCTime t uBase
+    (z +) $ floor $ diffUTCTime t uBase
 
-calcPmc :: Int -> UTCTime -> Maybe Integer
+calcPmc :: Int -> UTCTime -> Maybe Int
 calcPmc z t = fixPmc x where
-    -- x = toInteger (((z +) $ floor $ diffUTCTime t pBase) / 60)
-    x = quot (toInteger (z + floor (diffUTCTime t pBase))) 60
+    -- x = toInt (((z +) $ floor $ diffUTCTime t pBase) / 60)
+    x = quot (z + floor (diffUTCTime t pBase)) 60
 
-fixPmc :: Integer -> Maybe Integer
-fixPmc i = if i >= 0 && i < 2^64
+fixPmc :: Int -> Maybe Int
+fixPmc i = if i >= 0
         then Just i
         else Nothing
 
@@ -230,40 +231,3 @@ joinRow d s = init $ joinR d s
 joinR :: String -> [String] -> String
 joinR  _ [] =  []
 joinR d (s:ss) = s ++ d ++ joinR d ss
-
--- ======================================================================
--- Process From Template
--- ======================================================================
--- processFromXyz :: String -> Uargs -> Uwork -> Int -> String
--- processFromXyz v a w z = r where
---     r = if isNothing inval
---       then
---           idata ++ " is not valid whatever!"
---       else
---         joinRow (rSep w)
---         [ rtod, rdate, rtime, rzone, rjul
---         , rday, rpmc, runix, rleap ]
---        ++ rnote
---     idata = deriveId v  
---     inval = deriveIn idata  
---     rtod  = deriveTod  undefined
---     rdate = deriveYMD  undefined
---     rtime = deriveHMS  undefined
---     rjul  = deriveJul  undefined
---     rzone = formatZone (tickmode a) z
---     rday  = deriveDay  undefined
---     rpmc  = derivePmc  undefined
---     runix = deriveUnix undefined
---     rleap = deriveLsec undefined
---     rnote = formatAnnot a
-
---     deriveId   = undefined
---     deriveIn   = undefined
---     deriveTod  = undefined
---     deriveYMD  = undefined
---     deriveHMS  = undefined
---     deriveJul  = undefined
---     deriveDay  = undefined
---     derivePmc  = undefined
---     deriveUnix = undefined
---     deriveLsec = undefined
