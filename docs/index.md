@@ -1,8 +1,12 @@
-# A Haskell Journey 
+# A Programmer's Journey with Haskell
 
-## About haskell.untod, a Swiss Army knife for TOD and other clocks, and an ongiong Journey
+**Work in progress.**
 
-Work in progress.
+## Introduction
 
-## [Introduction](intro.md)
+
+
+
+
+
 ## [Getting started (Environment)](stenv.md)
