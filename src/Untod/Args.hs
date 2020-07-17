@@ -8,7 +8,7 @@ import Data.Semigroup ((<>))
 
 utargs :: Parser Uargs
 utargs = Uargs
-      <$> ( 
+      <$> (
             flag' TOD
           ( long "tod"
             <> short 'o'
@@ -30,7 +30,7 @@ utargs = Uargs
             <> short 's'
             <> help "Convert from 20th Century seconds" )
         <|> pure TOD
-          ) 
+          )
       <*> switch
           ( long "clipboard"
             <> short 'c'
@@ -49,7 +49,7 @@ utargs = Uargs
           ( long "zulu"
             <> short 'z'
             <> help "Suppress Zulu offset result if others given" )
-      <*> ( 
+      <*> (
             flag' LOR
           ( long "loran"
             <> short 'l'
@@ -89,16 +89,16 @@ utargs = Uargs
             (  metavar "<value...>"
             <> help "Values for conversion" )
             )
+      <*>   ( length <$> many
+              (flag' ()
+                ( long "version" <> short 'v'
+                <> help "Show version; more -v flags, more info")
+              )
+            )
 
-vOpts = infoOption utVstring 
-    (long "version" <> short 'v' <> help "Show version")
-
-vOgit = infoOption utGitmax 
-    (long "vv" <> help "Show commit information")
-
-utOpts = info (utargs <**> vOpts <**> vOgit <**> helper)
+utOpts = info (utargs <**> helper)
     ( fullDesc
-    <> progDesc ("Converts among TOD, Date/Time, PARS Perpetual Minute Tick," 
+    <> progDesc ("Converts among TOD, Date/Time, PARS Perpetual Minute Tick,"
     ++ "Unix seconds, and 20th century seconds for UTC, TAI or LORAN/IBM")
-    <> header "untod - a Swiss Army knife for TOD and other clocks" 
+    <> header "untod - a Swiss Army knife for TOD and other clocks"
     )

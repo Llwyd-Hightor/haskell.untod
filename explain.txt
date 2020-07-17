@@ -1,0 +1,7 @@
+UTC Mode:
+To:				TOD		Date	PMC		Unix	
+From
+TOD:	UTC		 -		+z-ls	+z-ls	-ls
+Date:	Local	 -z+ls	 -		=		-z
+PMC:	Local	 -z+ls	=		-		-z
+Unix:	TAI		 -		+z-ls	+z-ls	-ls

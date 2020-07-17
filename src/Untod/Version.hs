@@ -1,7 +1,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Untod.Version(
-        utVersion, 
-        utVstring, 
+        utVersion,
+        utVshort,
+        utVstring,
         utGitInf,
         utGitmax
         ) where
@@ -16,16 +17,9 @@ utVersion = "0.1.0.0"
 utGitInf  = concat  [ "(#", take 7 $ giHash gi,
                       utDirty,
                       " -- " , giCommitDate gi,
-                      ")" 
+                      ")"
                     ]
-utVstring = concat  [ "Version: ",
-                      utVersion,
-                      " ",
-                      utGitInf
-                    ]
-utGitmax  = concat  [ utVstring,
-                      "\n[",
-                      giBranch gi,
-                      "] ",
-                      giCommitMessage gi
-                    ]
+utVshort  = "Version: " ++ utVersion
+utVstring = utVshort ++ " " ++ utGitInf
+utGitmax  =
+    [ utVstring, "(" ++  giBranch gi ++ ") " ++ giCommitMessage gi ]
