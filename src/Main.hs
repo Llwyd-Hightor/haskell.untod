@@ -12,7 +12,8 @@ import System.Environment (
     )
 import Data.Time (
     timeZoneMinutes
-  , getCurrentTime
+  , getZonedTime
+  , zonedTimeToUTC
   , formatTime
   , getCurrentTimeZone
   , defaultTimeLocale
@@ -61,7 +62,7 @@ main = do
     lSysZone <- fmap timeZoneMinutes getCurrentTimeZone
     utClip   <- getClipboardString
     utInput  <- getInput $ input options
-    utNow    <- getCurrentTime
+    ltNow    <- getZonedTime
 
     let utwork = Uwork {
       aEnvZone = convZone aEnvZone
@@ -70,7 +71,7 @@ main = do
     , uInput   = alist options
                 ++ flatlines (nocomment (getClip (clip options) utClip))
                 ++ flatlines (nocomment utInput)
-    , uNow     = take 27 $ ftime "%F@%T%Q" utNow
+    , uNow     = take 27 $ formatTime defaultTimeLocale "%F@%T%Q" ltNow
     , tSep     = if csv options then [] else " :"
     , rSep     = if csv options then "," else " "
     , tAdj     = if tickmode options == TAI then 10 else 0
