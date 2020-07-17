@@ -98,7 +98,7 @@ utargs = Uargs
 
 utOpts = info (utargs <**> helper)
     ( fullDesc
-    <> progDesc ("Converts among TOD, Date/Time, PARS Perpetual Minute Tick,"
+    <> progDesc ("Converts among TOD, Date/Time, PARS Perpetual Minute Tick, "
     ++ "Unix seconds, and 20th century seconds for UTC, TAI or LORAN/IBM")
-    <> header "untod - a Swiss Army knife for TOD and other clocks"
+    <> header ("untod " ++ utVersion ++ " - a Swiss Army knife for TOD and other clocks")
     )

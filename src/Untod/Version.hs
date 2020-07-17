@@ -13,7 +13,7 @@ utDirty
     | giDirty gi = "*"
     | otherwise  = ""
 
-utVersion = "0.1.0.0"
+utVersion = "0.1.1.0"
 utGitInf  = concat  [ "(#", take 7 $ giHash gi,
                       utDirty,
                       " -- " , giCommitDate gi,
