@@ -84,7 +84,8 @@ main = do
     -- print zList
     case vvdisp options of
         0 -> fPrin (processAll (uInput utwork) options utwork zList)
-        1 -> fPrin [utVstring]
-        _ -> fPrin [utGitmax]
+        1 -> fPrin [utVshort]
+        2 -> fPrin [utVstring]
+        _ -> fPrin utGitmax
     -- print utClip
     -- print (uClip utwork)

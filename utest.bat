@@ -4,7 +4,7 @@ SET RUNT="D:\Development\Rust\untod\target\release\untod.exe"
 SET RUNS=STACK exec UNTOD -- -a
 SET RUNP=ECHO untod
 ECHO ======================================================================================================
-%RUNS% -v -v 
+%RUNS% -vvv
 ECHO ======================================================================================================
 SET UNTOD_AZONE=-4
 SET UNTOD_LZONE=0
