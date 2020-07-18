@@ -42,17 +42,17 @@ data Uwork = Uwork {
 } deriving Show
 
 data Uargs = Uargs {
-    runmode  :: RunMode      -- Calculation type
-  , clip     :: Bool         -- Include data from clipboard
-  , csv      :: Bool         -- Output in CSV format
-  , headers  :: Bool         -- Output includes column headers
-  , annot    :: Bool         -- Annotate plain output with run mode
-  , zulu     :: Bool         -- Suppress GMT if any other zones
-  , tickmode :: TickMode     -- Clock convention
-  , padmode  :: PadMode      -- How to pad TOD clocks
-  , input    :: Maybe String -- Include input from file or STDIN
-  , lzone    :: Maybe Float  -- Override local time zone
-  , azone    :: Maybe Float  -- Provide one additional timezone
-  , alist    :: [String]     -- Value parameter list from command line
-  , vvdisp   :: Int          -- Version flag(s)
+    runmode  :: RunMode        -- Calculation type
+  , clip     :: Bool           -- Include data from clipboard
+  , csv      :: Bool           -- Output in CSV format
+  , headers  :: Bool           -- Output includes column headers
+  , annot    :: Bool           -- Annotate plain output with run mode
+  , zulu     :: Bool           -- Suppress GMT if any other zones
+  , tickmode :: TickMode       -- Clock convention
+  , padmode  :: PadMode        -- How to pad TOD clocks
+  , input    :: Maybe String   -- Include input from file or STDIN
+  , lzone    :: Maybe Float    -- Override local time zone
+  , azone    :: Maybe Float    -- Provide one additional timezone
+  , vvdisp   :: Int            -- Version flag(s)
+  , alist    :: Maybe [String] -- Value parameter list from command line
   } deriving Show

@@ -47,6 +47,10 @@ nocomment s = filter (\x -> '#' /= head x) (lines s)
 flatlines :: [String] -> [String]
 flatlines = concatMap words
 
+getopt :: Maybe [String] -> [String]
+getopt Nothing = []
+getopt (Just s) = s
+
 fPrin :: [String] -> IO ()
 fPrin [] = return ()
 fPrin (x:xs) = do
@@ -68,7 +72,7 @@ main = do
       aEnvZone = convZone aEnvZone
     , lEnvZone = convZone lEnvZone
     , lSysZone = lSysZone * 60
-    , uInput   = alist options
+    , uInput   = getopt (alist options)
                 ++ flatlines (nocomment (getClip (clip options) utClip))
                 ++ flatlines (nocomment utInput)
     , uNow     = take 27 $ formatTime defaultTimeLocale "%F@%T%Q" ltNow

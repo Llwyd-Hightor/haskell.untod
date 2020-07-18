@@ -29,7 +29,7 @@ utargs = Uargs
           ( long "seconds"
             <> short 's'
             <> help "Convert from 20th Century seconds" )
-        <|> pure TOD
+        <|> pure DATE
           )
       <*> switch
           ( long "clipboard"
@@ -85,15 +85,15 @@ utargs = Uargs
             <> metavar "<offset>"
             <> help "Alternative time offset ([-+]n.n) [env: UNTOD_AZONE=]" )
             )
-      <*> ( many $ argument str
-            (  metavar "<value...>"
-            <> help "Values for conversion" )
-            )
       <*>   ( length <$> many
               (flag' ()
                 ( long "version" <> short 'v'
                 <> help "Show version; more -v flags, more info")
               )
+            )
+      <*> ( optional $ many $ argument str
+            (  metavar "<value...>"
+            <> help "Values for conversion" )
             )
 
 utOpts = info (utargs <**> helper)
