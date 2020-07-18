@@ -4,6 +4,7 @@ module Untod.Formatters
 import Data.Time
 import Text.Printf.Mauke
 import Untod.Data
+import Untod.Utils
 
 formatHeaders :: Bool -> Bool -> [String]
 formatHeaders False _ = []
@@ -56,12 +57,9 @@ formatLsec False _  _ = "    "                  -- Pad Non-CSV mode
 
 formatAnnot :: Uargs -> String
 formatAnnot a =
-    if   annot a > csv a
+    if annot a > csv a
         then show $ runmode a
         else []
-
-ftime :: String -> UTCTime -> String
-ftime = formatTime defaultTimeLocale
 
 padTod :: PadMode -> String -> String
 padTod R v =

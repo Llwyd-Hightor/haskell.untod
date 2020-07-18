@@ -1,10 +1,13 @@
 @ECHO OFF
 CLS
 SET RUNT="D:\Development\Rust\untod\target\release\untod.exe"
-SET RUNS=D:\Development\Haskell\untod\.stack-work\install\f9a1e984\bin\untod.exe -a
+SET UNTOD="D:\Development\Haskell\untod\.stack-work\install\f9a1e984\bin\untod.exe"
+SET RUNS= %UNTOD% -a
 SET RUNP=ECHO untod
 ECHO ======================================================================================================
 %RUNS% -vvv
+ECHO ------------------------------------------------------------------------------------------------------
+%UNTOD%
 ECHO ======================================================================================================
 SET UNTOD_AZONE=-4
 SET UNTOD_LZONE=0
