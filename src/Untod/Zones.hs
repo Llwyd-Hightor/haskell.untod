@@ -16,11 +16,11 @@ buildZlist a w = zgmt ++ zlocal ++ zaltern where
       zaltern = buildaltern (azone a) (aEnvZone w)
 -- =======================================================================
 buildgmt    :: Bool -> [Int] -> [Int] -> [Int]
-buildgmt False [0] _ = []
-buildgmt False _ [0] = []
-buildgmt False _ _   = [0]
-buildgmt True [] []  = [0]
-buildgmt True _ _    = []
+buildgmt True  [0] _   = []
+buildgmt True  _   [0] = []
+buildgmt True  _   _   = [0]
+buildgmt False []  []  = [0]
+buildgmt False _   _   = []
 -- =======================================================================
 buildlocal  :: Maybe Float -> Maybe Int -> Int -> [Int] -> [Int]
 buildlocal Nothing Nothing s [] = [s]

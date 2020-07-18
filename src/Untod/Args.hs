@@ -9,14 +9,14 @@ import Data.Semigroup ((<>))
 utargs :: Parser Uargs
 utargs = Uargs
       <$> (
-            flag' TOD
-          ( long "tod"
-            <> short 'o'
-            <> help "Convert from TOD (default)" )
-        <|> flag' DATE
+            flag' DATE
           ( long "date"
             <> short 'd'
-            <> help "Convert from Date/Time" )
+            <> help "Convert from Date/Time (default)" )
+        <|> flag' TOD
+          ( long "tod"
+            <> short 'o'
+            <> help "Convert from TOD" )
         <|> flag' PMC
           ( long "pmc"
             <> short 'm'
@@ -48,7 +48,7 @@ utargs = Uargs
       <*> switch
           ( long "zulu"
             <> short 'z'
-            <> help "Suppress Zulu offset result if others given" )
+            <> help "Also show Zulu offset" )
       <*> (
             flag' LOR
           ( long "loran"
