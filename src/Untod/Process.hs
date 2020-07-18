@@ -16,32 +16,32 @@ uBase = ymdToUTC 1970 1 1
 ptDelta = diffUTCTime pBase tBase
 utDelta = diffUTCTime uBase tBase
 -- =======================================================================
-processAll :: [String] -> Uargs -> Uwork -> [Int] -> [String]
-processAll [] a w z
-    | runmode a == DATE = processAll [uNow w] a w z
+processAll :: [String] -> Uargs -> Uwork -> [Int] -> Int -> [String]
+processAll [] a w z l
+    | runmode a == DATE = processAll [uNow w] a w z l 
     | otherwise = ["No data provided"]
-processAll l a w z =
+processAll v a w z l =
     formatHeaders (headers a) (csv a) ++
-    processData l a w z
+    processData v a w z l
 -- =======================================================================
-processData :: [String] -> Uargs -> Uwork -> [Int] -> [String]
-processData [] _ _ _ = []
-processData (v:vs) a w z =
-    processZones v a w z ++
-    processData vs a w z
+processData :: [String] -> Uargs -> Uwork -> [Int] -> Int -> [String]
+processData [] _ _ _ _ = []
+processData (v:vs) a w z l =
+    processZones v a w z l ++
+    processData vs a w z l
 -- =======================================================================
-processZones :: String -> Uargs -> Uwork -> [Int] -> [String]
-processZones [] _ _ _ = []
-processZones v a w (z:zs) =
-    processOne v a w z ++
-    processZones v a w zs
-processZones _ _ _ _ = []
+processZones :: String -> Uargs -> Uwork -> [Int] -> Int -> [String]
+processZones [] _ _ _ _ = []
+processZones v a w (z:zs) l =
+    processOne v a w z l ++
+    processZones v a w zs l
+processZones _ _ _ _ _ = []
 -- =======================================================================
-processOne :: String -> Uargs -> Uwork -> Int -> [String]
-processOne v a w z = [result] where
+processOne :: String -> Uargs -> Uwork -> Int -> Int -> [String]
+processOne v a w z l = [result] where
     result = case runmode a of
-        TOD  -> processFromTOD  v a w z
-        DATE -> processFromDATE v a w z
+        TOD  -> processFromTOD  v a w z 
+        DATE -> processFromDATE v a w z l
         PMC  -> processFromPMC  v a w z
         UNIX -> processFromUNIX v a w z
         CSEC -> processFromCSEC v a w z
@@ -71,17 +71,17 @@ processFromTOD  v a w z = r where
     udiff = fromIntegral $ lsec - tAdj w
     udate = addUTCTime (0.000001 * fromIntegral itod - udiff) tBase
 -- =======================================================================
-processFromDATE :: String -> Uargs -> Uwork -> Int -> String
-processFromDATE v a w z = r where
+processFromDATE :: String -> Uargs -> Uwork -> Int -> Int -> String
+processFromDATE v a w z l = r where
     r = if isNothing xdate
         then v ++ " is not a recognisable date/time"
         else joinRow (rSep w)
             [ formatTod ltod (tSep w)
-            , formatYMD $ fromJust xdate
-            , formatHMS $ fromJust xdate
+            , formatYMD wdate
+            , formatHMS wdate
             , formatZone (tickmode a) z
-            , formatJul  $ fromJust xdate
-            , formatDay  $ fromJust xdate
+            , formatJul wdate
+            , formatDay wdate
             , formatPmc  $ calcPmc z udate
             , formatUnix (csv a) $ calcUnix z udate
             , formatLsec (csv a) (tickmode a) lsec
@@ -90,10 +90,22 @@ processFromDATE v a w z = r where
 
     xdate = getdate v
     udate = fromJust xdate
+    noInp = null $ uInput w
     lsec = lsSearchByDay (tickmode a) udate
-    ldiff = fromIntegral $ lsec - tAdj w - z
+
+    wdate = addUTCTime (fromIntegral (z-l)) udate
+    -- wdate = tdate
+
+    ldiff = fromIntegral $ lsec - tAdj w - l
     tdate = addUTCTime ldiff udate
     ltod = round $ (1000000 *) $ diffUTCTime tdate tBase
+    -- ltod = round $ (1000000 *) $ diffUTCTime udate tBase
+
+
+
+
+    -- ldiff = fromIntegral $ lsec - tAdj w - z
+    -- tdate = addUTCTime ldiff udate
 -- =======================================================================
 processFromPMC :: String -> Uargs -> Uwork -> Int -> String
 processFromPMC v a w z = r where

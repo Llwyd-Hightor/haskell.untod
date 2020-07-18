@@ -14,6 +14,9 @@ buildZlist a w = zgmt ++ zlocal ++ zaltern where
       zgmt = buildgmt (zulu a) zlocal zaltern
       zlocal = buildlocal (lzone a) (lEnvZone w) (lSysZone w) zaltern
       zaltern = buildaltern (azone a) (aEnvZone w)
+
+buildZlocal :: Uargs -> Uwork -> Int
+buildZlocal a w = head $ buildlocal (lzone a) (lEnvZone w) (lSysZone w) []
 -- =======================================================================
 buildgmt    :: Bool -> [Int] -> [Int] -> [Int]
 buildgmt True  [0] _   = []

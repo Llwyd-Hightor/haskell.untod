@@ -64,14 +64,15 @@ main = do
     }
 
     let zList = buildZlist options utwork
+    let localZone = buildZlocal options utwork
 
     -- print options
     -- print utwork
     -- print zList
     case vvdisp options of
-        0 -> fPrin (processAll (uInput utwork) options utwork zList)
-        1 -> fPrin [utVshort]
-        2 -> fPrin [utVstring]
-        _ -> fPrin utGitmax
+      0 -> fPrin (processAll (uInput utwork) options utwork zList localZone)
+      1 -> fPrin [utVshort]
+      2 -> fPrin [utVstring]
+      _ -> fPrin utGitmax
     -- print utClip
     -- print (uClip utwork)

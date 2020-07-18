@@ -49,14 +49,18 @@ utargs = Uargs
             <> short 'z'
             <> help "Also show Zulu offset" )
       <*> (
-            flag' LOR
+            flag' UTC
+          ( long "gmt"
+            <> short 'g'
+            <> help "UTC with keao-seconds (default)" )
+        <|> flag' LOR
           ( long "loran"
             <> short 'l'
             <> help "Ignore leap-seconds -- LORAN/IBM" )
         <|> flag' TAI
           ( long "tai"
             <> short 't'
-            <> help "Ignore leap-seconds -- TAI (International Atomic Tick" )
+            <> help "Ignore leap-seconds -- TAI (International Atomic Clock" )
         <|> pure UTC
           )
       <*> (
