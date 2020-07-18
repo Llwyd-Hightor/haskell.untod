@@ -7,13 +7,16 @@ module Untod.Version(
         utGitmax
         ) where
 import GitHash
+import Data.Version
+import Paths_untod
+
 gi = $$tGitInfoCwd
 
 utDirty
     | giDirty gi = "*"
     | otherwise  = ""
 
-utVersion = "0.1.1.0"
+utVersion = showVersion version
 utGitInf  = concat  [ "(#", take 7 $ giHash gi,
                       utDirty,
                       " -- " , giCommitDate gi,

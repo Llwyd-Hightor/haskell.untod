@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 244253995f31c98e2b93c48906dad6b00c4fe8573dd0b8a90dc2bf3b57bdcfab
+-- hash: 14d753e133a9b26fe0f4c8796583d68e83c1f072d8fb98a05fa67663764f8873
 
 name:           untod
-version:        0.1.0.0
+version:        0.1.1.0
 synopsis:       A Swiss Army knife for TOD and other clocks
 description:    Please see the README on GitHub at <https://github.com/longborough/untod#readme>
 category:       Utility
