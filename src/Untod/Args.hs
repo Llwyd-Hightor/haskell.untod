@@ -4,7 +4,6 @@ module Untod.Args (
 import Untod.Version
 import Untod.Data
 import Options.Applicative
-import Data.Semigroup ((<>))
 
 utargs :: Parser Uargs
 utargs = Uargs
