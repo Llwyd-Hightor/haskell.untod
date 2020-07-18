@@ -1,3 +1,25 @@
+{- |
+Module      :  $Header$
+Description :  untod: A Swiss Army knife for TOD clocks
+Copyright   :  (c) 2020 Brent Longborough
+License     :  BSD3
+
+Maintainer  :  brent@llwyd-consulting.cymru
+Stability   :  unstable
+Portability :  portable
+
+untod is a utility for conversion of date and time values
+among System/Z TOD, Date and time, 
+the IPARS Perpetual Mimute Clock,
+the Unix seconds clock, 
+and a seconds clock based on 1900-01-01
+
+It has many options, including up to three timezones, 
+a clock reference mode (UTC, LORAN, or TAI), 
+and options to read from file, standard input, 
+or the system clipboard.
+-}
+-- =======================================================================
 module Main where
 
 import Untod.Args
