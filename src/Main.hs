@@ -51,7 +51,7 @@ main = do
     ltNow    <- getZonedTime
 
     let utwork = Uwork {
-      aEnvZone = convZone aEnvZone
+      aEnvZone = aEnvZone
     , lEnvZone = convZone lEnvZone
     , lSysZone = lSysZone * 60
     , uInput   = getopt (alist options)

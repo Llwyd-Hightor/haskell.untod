@@ -31,14 +31,14 @@ instance Show PadMode where
       show I = "intel"
 
 data Uwork = Uwork {
-    aEnvZone  :: Maybe Int   -- Possible alternate timezone from environment
-  , lSysZone  :: Int         -- Local timezone (system)
-  , lEnvZone  :: Maybe Int   -- Possible local timezone from environment
-  , uInput    :: [String]    -- All input data, munged together as words
-  , uNow      :: String      -- Currebt Date/Time
-  , tSep      :: String      -- Separator for formatting the TOD clock
-  , rSep      :: String      -- Separator for output fields (space or comma)
-  , tAdj      :: Int         -- Seconds adjustment for tickmode TAI
+    aEnvZone  :: Maybe String -- Possible alternate timezone from environment
+  , lSysZone  :: Int          -- Local timezone (system)
+  , lEnvZone  :: Maybe Int    -- Possible local timezone from environment
+  , uInput    :: [String]     -- All input data, munged together as words
+  , uNow      :: String       -- Currebt Date/Time
+  , tSep      :: String       -- Separator for formatting the TOD clock
+  , rSep      :: String       -- Separator for output fields (space or comma)
+  , tAdj      :: Int          -- Seconds adjustment for tickmode TAI
 } deriving Show
 
 data Uargs = Uargs {
