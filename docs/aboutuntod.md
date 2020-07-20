@@ -31,17 +31,17 @@ here's the output from the latest release's (0.1.1) `untod --help`
 ```
 untod 0.1.1.0 - a Swiss Army knife for TOD and other clocks
 
-Usage: untod.EXE [(-o|--tod) | (-d|--date) | (-m|--pmc) | (-u|--unix) | 
-                   (-s|--seconds)] [-c|--clipboard] [--csv] [--headers] 
-                 [-a|--annot] [-z|--zulu] [(-l|--loran) | (-t|--tai)] 
-                 [--lpad | --rpad] [-i|--input <filename>] [--lzone <offset>] 
-                 [--azone <offset>] [<value...>] [-v|--version]
+Usage: untod [(-d|--date) | (-o|--tod) | (-m|--pmc) | (-u|--unix) | 
+               (-s|--seconds)] [-c|--clipboard] [--csv] [--headers] [-a|--annot]
+             [-z|--zulu] [(-g|--gmt) | (-l|--loran) | (-t|--tai)] 
+             [--lpad | --rpad] [-i|--input <filename>] [--lzone <offset>] 
+             [--azone <offset>] [-v|--version] [<value...>]
   Converts among TOD, Date/Time, PARS Perpetual Minute Tick, Unix seconds, and
   20th century seconds for UTC, TAI or LORAN/IBM
 
 Available options:
-  -o,--tod                 Convert from TOD (default)
-  -d,--date                Convert from Date/Time
+  -d,--date                Convert from Date/Time (default)
+  -o,--tod                 Convert from TOD
   -m,--pmc                 Convert from PMC
   -u,--unix                Convert from Unix seconds
   -s,--seconds             Convert from 20th Century seconds
@@ -49,9 +49,11 @@ Available options:
   --csv                    Output in CSV format
   --headers                Output column headers
   -a,--annot               Annotate plain output with run mode
-  -z,--zulu                Suppress Zulu offset result if others given
+  -z,--zulu                Also show Zulu offset
+  -g,--gmt                 UTC with keao-seconds (default)
   -l,--loran               Ignore leap-seconds -- LORAN/IBM
-  -t,--tai                 Ignore leap-seconds -- TAI (International Atomic Tick
+  -t,--tai                 Ignore leap-seconds -- TAI (International Atomic
+                           Clock
   --lpad                   Pad TOD with zeroes on left
   --rpad                   Pad TOD with zeroes on right (default is intelligent
                            padding)
@@ -59,8 +61,7 @@ Available options:
   --lzone <offset>         Override local time offset ([-+]n.n) [env:
                            UNTOD_LZONE=]
   --azone <offset>         Alternative time offset ([-+]n.n) [env: UNTOD_AZONE=]
-  <value...>               Values for conversion
   -v,--version             Show version; more -v flags, more info
+  <value...>               Values for conversion
   -h,--help                Show this help text
-
 ```
