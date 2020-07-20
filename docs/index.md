@@ -23,3 +23,10 @@ to learn a new language.
 
 
 ## [Getting started (Environment)](stenv.md)
+
+----
+### A Programmer's Journey with Haskell
+
+### Copyright © 2020, Brent Longborough
+
+### License: CC BY-SA 
