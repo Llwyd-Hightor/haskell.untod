@@ -85,7 +85,7 @@ processFromCSEC v a w z = r where
 processFromDATE :: String -> Uargs -> Uwork -> Int -> Int -> String
 processFromDATE v a w z l = r where
     r = if isNothing xdate
-        then v ++ " is not a recognisable date/time"
+        then v ++ " is not a recognisable date/time >= 1900"
         else joinRow (rSep w)
             [ formatTod ltod (tSep w)
             , formatYMD wdate
@@ -231,9 +231,10 @@ getcsec s = readMaybe s :: Maybe Int
 -- Convert input date/time, padding with lower-order defaults
 -- -----------------------------------------------------------------------
 getdate :: String -> Maybe UTCTime
-getdate s = if isNothing d
-    then ptime "%Y.%j@%T%Q" j
-    else d where
+getdate s 
+    | isNothing d = ptime "%Y.%j@%T%Q" j
+    | "19" > take 2 s = Nothing
+    | otherwise = d where
         t = s ++ drop (length s) "1900-01-01@00:00:00.000000000"
         j = s ++ drop (length s) "1900.001@00:00:00.000000000"
         d = ptime "%F@%T%Q" t
