@@ -79,14 +79,14 @@ utargs = Uargs
             <> help "Input values from a file ( - for STDIN )" )
             )
       <*> ( optional $ option auto
-            (  long "lzone"
-            <> metavar "<offset>"
-            <> help "Override local time offset ([-+]n.n) [env: UNTOD_LZONE=]" )
-            )
-      <*> ( optional $ option auto
             (  long "azone"
             <> metavar "<offset>"
             <> help "Alternative time offset ([-+]n.n) [env: UNTOD_AZONE=]" )
+            )
+      <*> ( optional $ option auto
+            (  long "lzone"
+            <> metavar "<offset>"
+            <> help "Override local time offset ([-+]n.n) [env: UNTOD_LZONE=]" )
             )
       <*>   ( length <$> many
               (flag' ()
@@ -98,7 +98,9 @@ utargs = Uargs
             (  metavar "<value...>"
             <> help "Values for conversion" )
             )
-
+      <*> switch
+          ( short 'x' )
+  
 utOpts = info (utargs <**> helper)
     ( fullDesc
     <> progDesc ("Converts among TOD, Date/Time, PARS Perpetual Minute Tick, "

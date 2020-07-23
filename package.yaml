@@ -30,7 +30,6 @@ dependencies:
 # - untod
 - deepseq
 - Clipboard
-- printf-mauke
 
 # library:
 #   source-dirs: src

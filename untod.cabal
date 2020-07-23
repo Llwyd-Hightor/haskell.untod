@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0e36652c580721ba8b8e2c303caec361bed1fe807eaebe3fd0445610ac672126
+-- hash: 1ab79e28d34446c72d38199f5a6042c04fccb9af082e2e6e2455dc6dedfc8976
 
 name:           untod
 version:        0.1.1.0
@@ -51,7 +51,6 @@ executable untod
     , directory
     , githash >=0.1.4.0
     , optparse-applicative >=0.15.1.0
-    , printf-mauke
     , time
   default-language: Haskell2010
 
@@ -69,7 +68,6 @@ test-suite untod-test
     , deepseq
     , githash >=0.1.4.0
     , optparse-applicative >=0.15.1.0
-    , printf-mauke
     , time
     , untod
   default-language: Haskell2010

@@ -18,6 +18,7 @@ utDelta = diffUTCTime uBase tBase
 
 -- =======================================================================
 -- Entry point:
+--      Prepares any headers
 --      Process all [input values] × [timezones]
 --      Handle case of no input as local date/time
 -- -----------------------------------------------------------------------
@@ -26,7 +27,7 @@ processAll [] a w z l
     | runmode a == DATE = processAll [uNow w] a w z l
     | otherwise = ["No data provided"]
 processAll v a w z l =
-    formatHeaders (headers a) (csv a) ++
+    formatHeaders (chop a) (headers a) (csv a) ++
     processData v a w z l
 
 -- =======================================================================

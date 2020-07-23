@@ -5,6 +5,7 @@ import Data.Time
 import System.Directory
 import System.IO
 import Control.DeepSeq
+import Untod.Data
 
 ymdToUTC :: Int -> Int -> Int -> UTCTime 
 ymdToUTC y m d = UTCTime {
@@ -45,6 +46,16 @@ fPrin [] = return ()
 fPrin (x:xs) = do
     putStrLn x
     fPrin xs
+
+fPrinc :: Uargs -> [String] -> IO ()
+fPrinc a [] = fPrin []
+fPrinc a s = fPrin r where
+    r 
+      | chop a = map (take n) s ++ map (drop n) s
+      | otherwise = s
+    n 
+      | csv a = 58
+      | otherwise = 60  
 
 ftime :: (FormatTime t) => String -> t -> String
 ftime = formatTime defaultTimeLocale

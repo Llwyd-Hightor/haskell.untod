@@ -55,4 +55,5 @@ data Uargs = Uargs {
   , azone    :: Maybe Float    -- Provide one additional timezone
   , vvdisp   :: Int            -- Version flag(s)
   , alist    :: Maybe [String] -- Value parameter list from command line
+  , chop     :: Bool           -- Chop output into two blocks
   } deriving Show

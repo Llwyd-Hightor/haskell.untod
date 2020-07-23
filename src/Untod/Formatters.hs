@@ -2,19 +2,22 @@ module Untod.Formatters
     where
 
 import Data.Time
-import Text.Printf.Mauke
+import Text.Printf
 import Untod.Data
 import Untod.Utils
 
-formatHeaders :: Bool -> Bool -> [String]
-formatHeaders False _ = []
-formatHeaders True  False =
+formatHeaders :: Bool -> Bool -> Bool -> [String]
+formatHeaders _ False _ = []
+formatHeaders _ True False =
     [ "Ext       TOD              Date          Time        Zone     Julian   D    Perp        Unix      Leap"
    , "--- ----------------- : ---------- --------------- --------- -------- --- -------- -------------- ----"
     ]
-formatHeaders True True =
-    [ "ExtTOD,Date,Time,Zone,Julian,D,Perp,Unix,Leap"
-    ]
+formatHeaders False True True = r where 
+    r = [ "ExtTOD,Date,Time,Zone,Julian,D,Perp,Unix,Leap" ] where
+formatHeaders True True True = r where 
+    r = [ "ExtTOD,Date,Time,Zone" ++
+          "                                     " ++ 
+          ",Julian,D,Perp,Unix,Leap" ] 
 
 formatTod :: Int -> String -> String
 formatTod t z = concat [a," ",b," ",c,"---",z] where

@@ -70,7 +70,7 @@ main = do
     -- print utwork
     -- print zList
     case vvdisp options of
-      0 -> fPrin (processAll (uInput utwork) options utwork zList localZone)
+      0 -> fPrinc options (processAll (uInput utwork) options utwork zList localZone)
       1 -> fPrin [utVshort]
       2 -> fPrin [utVstring]
       _ -> fPrin utGitmax
