@@ -51,8 +51,8 @@ data Uargs = Uargs {
   , tickmode :: TickMode       -- Clock convention
   , padmode  :: PadMode        -- How to pad TOD clocks
   , input    :: Maybe String   -- Include input from file or STDIN
-  , lzone    :: Maybe Float    -- Override local time zone
   , azone    :: Maybe Float    -- Provide one additional timezone
+  , lzone    :: Maybe Float    -- Override local time zone
   , vvdisp   :: Int            -- Version flag(s)
   , alist    :: Maybe [String] -- Value parameter list from command line
   , chop     :: Bool           -- Chop output into two blocks
