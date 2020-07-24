@@ -12,12 +12,12 @@ formatHeaders _ True False =
     [ "Ext       TOD              Date          Time        Zone     Julian   D    Perp        Unix      Leap"
    , "--- ----------------- : ---------- --------------- --------- -------- --- -------- -------------- ----"
     ]
-formatHeaders False True True = r where 
-    r = [ "ExtTOD,Date,Time,Zone,Julian,D,Perp,Unix,Leap" ] where
-formatHeaders True True True = r where 
-    r = [ "ExtTOD,Date,Time,Zone" ++
-          "                                     " ++ 
-          ",Julian,D,Perp,Unix,Leap" ] 
+formatHeaders False True True =
+    [ "ExtTOD,Date,Time,Zone,Julian,D,Perp,Unix,Leap" ]
+formatHeaders True True True =
+    [ "ExtTOD,Date,Time,Zone," ++
+      "                                     " ++
+      "Julian,D,Perp,Unix,Leap" ]
 
 formatTod :: Int -> String -> String
 formatTod t z = concat [a," ",b," ",c,"---",z] where
@@ -75,8 +75,8 @@ padTod I v = if 'B' < head v
 padPmc :: PadMode -> String -> String
 padPmc R v = printf "%8s" $ take 8 ( v ++ zeropad )
 padPmc L v = v
-padPmc I v = if '0' == head v 
-    then v else padPmc R v 
+padPmc I v = if '0' == head v
+    then v else padPmc R v
 
 zeropad :: String
 zeropad = "0000000000000000"

@@ -201,7 +201,6 @@ processfromcoru v a w z vsec = r where
 -- -----------------------------------------------------------------------
 calcPmc :: Int -> UTCTime -> Maybe Int
 calcPmc z t = fixPmc x where
-    -- x = toInt (((z +) $ floor $ diffUTCTime t pBase) / 60)
     x = quot (z + floor (diffUTCTime t pBase)) 60
 
 -- =======================================================================

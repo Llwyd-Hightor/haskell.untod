@@ -54,8 +54,8 @@ fPrinc a s = fPrin r where
       | chop a = map (take n) s ++ map (drop n) s
       | otherwise = s
     n 
-      | csv a = 58
-      | otherwise = 60  
+      | csv a = 59
+      | otherwise = 61  
 
 ftime :: (FormatTime t) => String -> t -> String
 ftime = formatTime defaultTimeLocale
