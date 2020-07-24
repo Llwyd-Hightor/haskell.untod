@@ -11,36 +11,23 @@ convZone (Just s) =
       fmap (\x -> round (3600 * x)) (readMaybe s :: Maybe Float)
 -- =======================================================================
 buildZlist :: Uargs -> Uwork -> [Int]
-buildZlist a w = nub (zgmt ++ zlocal ++ zaltern) where
-      zgmt = buildgmt (zulu a) zlocal zaltern
-      zlocal = buildlocal (lzone a) (lEnvZone w) (lSysZone w) zaltern
+buildZlist a w = nub $ zgmt ++ zlolalt where
+      zlocal = buildlocal (lzone a) (lEnvZone w) (lSysZone w)
       zaltern = buildaltern (azone a) (aEnvZone w)
+      zlolalt = zlocal:zaltern
+      zgmt = buildgmt (zulu a) zlolalt
 
 buildZlocal :: Uargs -> Uwork -> Int
-buildZlocal a w = head $ buildlocal (lzone a) (lEnvZone w) (lSysZone w) []
+buildZlocal a w = buildlocal (lzone a) (lEnvZone w) (lSysZone w) 
 -- =======================================================================
-buildgmt    :: Bool -> [Int] -> [Int] -> [Int]
-buildgmt True  [0] _   = []
-buildgmt True  _   [0] = []
-buildgmt True  _   _   = [0]
-buildgmt False []  []  = [0]
-buildgmt False _   _   = []
+buildgmt :: Bool -> [Int] -> [Int]
+buildgmt True  _   = [0]
+buildgmt False l = [0 | 0 `elem` l]
 -- =======================================================================
-buildlocal  :: Maybe Float -> Maybe Int -> Int -> [Int] -> [Int]
-buildlocal Nothing Nothing s [] = [s]
-buildlocal Nothing Nothing s a
-      | s `elem` a = []
-      | otherwise = [s]
--- buildlocal Nothing Nothing _  _ = [0]
-buildlocal Nothing (Just e) _ a
-      | e `elem` a = []
-      | otherwise = [e]
--- buildlocal Nothing (Just e) _ _ = [e]
-buildlocal (Just p) _ _ a
-      | p' `elem` a = []
-      | otherwise = [p'] where
-            p' = round $ 3600 * p :: Int
--- buildlocal (Just p) _ _ _ = [round $ 3600 * p]
+buildlocal  :: Maybe Float -> Maybe Int -> Int -> Int
+buildlocal Nothing Nothing s = s
+buildlocal Nothing (Just e) _ = e
+buildlocal (Just p) _ _ = round $ 3600 * p :: Int
 -- =======================================================================
 buildaltern :: Maybe Float -> Maybe String -> [Int]
 buildaltern Nothing Nothing = []
