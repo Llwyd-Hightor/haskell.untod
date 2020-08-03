@@ -37,6 +37,9 @@ nocomment s = filter (\x -> '#' /= head x) (lines s)
 flatlines :: [String] -> [String]
 flatlines = concatMap words
 
+flatfirst :: [String] -> [String]
+flatfirst = concatMap (take 1 . words)
+
 getopt :: Maybe [String] -> [String]
 getopt Nothing = []
 getopt (Just s) = s

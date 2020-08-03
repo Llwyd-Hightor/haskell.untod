@@ -13,7 +13,7 @@ ECHO ===========================================================================
 SET UNTOD_LZONE=0
 SET UNTOD_AZONE=
 SET UNTOD_LZONE=1
-SET PARM=-z --lzone=1 --azone=-8 -d 2020-07-19@01
+SET PARM=-z --lzone=1 --azone=-8 -d 2020-07-25@19:19:45.545965
 %RUNP% %PARM% 
 %RUNS% %PARM% 
 REM %RUNT% %PARM% 

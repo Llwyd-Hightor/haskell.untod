@@ -56,7 +56,7 @@ main = do
     , lSysZone = lSysZone * 60
     , uInput   = getopt (alist options)
                 ++ flatlines (nocomment (getClip (clip options) utClip))
-                ++ flatlines (nocomment utInput)
+                ++ flatfirst (nocomment utInput)
     , uNow     = take 27 $ ftime "%F@%T%Q" ltNow
     , tSep     = if csv options then [] else " :"
     , rSep     = if csv options then "," else " "
