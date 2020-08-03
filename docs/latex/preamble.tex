@@ -1,0 +1,107 @@
+\usepackage[british]{babel}
+\selectlanguage{british}
+\usepackage[style=iso]{datetime2}
+\usepackage[pcount,grumpy,]{gitinfo2}
+\usepackage{tgpagella}
+\usepackage{fontspec}
+\setmainfont[Numbers={Proportional,OldStyle},Ligatures=TeX]{TeX Gyre Pagella}
+\setsansfont[Numbers={Proportional,OldStyle},Ligatures=TeX]{TeX Gyre Adventor}
+\setmonofont{Consolas}
+\newfontfamily\supersmall[Scale=0.61]{Consolas}
+\usepackage{enumitem}
+\setlist[description]{%
+    format=\bfseries,
+    style=nextline,
+    leftmargin=3em,
+    itemsep=0.5\onelineskip}
+% - - - - - - - - - - - - - - - - - - - - - - - - -
+\input{IBMColours.tex}
+\colorlet{bg}{IBMBlack}
+\colorlet{fg}{IBMCoolGrey20}
+\colorlet{utc}{IBMGreen40}
+\colorlet{lor}{IBMBlue50}
+\colorlet{tai}{IBMTeal40}
+\colorlet{head}{IBMAlert20}
+\colorlet{note}{IBMRed60}
+\colorlet{rule}{IBMBlue50}
+\colorlet{num}{IBMBlack}
+\usepackage{listings}
+\lstdefinestyle{base}{%
+backgroundcolor={\color{bg}},
+basicstyle={\color{fg}\ttfamily},
+emphstyle={\itshape},
+frame=none,
+framexleftmargin=5pt,
+framexrightmargin=5pt,
+numbers=left,
+stepnumber=1,
+numbersep=8pt,
+numberstyle={\color{num}\ttfamily\small},
+escapechar=!,
+upquote=true,
+morecomment=[f][\color{rule}]{---},
+morecomment=[f][\color{rule}]{===},
+morecomment=[l][\color{note}]{<==},
+morekeywords={[1]Ext,TOD,Date,Time,Zone,
+Julian,D,Perp,Unix,Leap},
+keywordstyle={[1]\color{head}},
+morekeywords={[2]UTC,},
+keywordstyle={[2]\color{utc}},
+morekeywords={[3]LOR,},
+keywordstyle={[3]\color{lor}},
+morekeywords={[4]TAI,},
+keywordstyle={[4]\color{tai}},
+}
+\lstdefinestyle{plain}{%
+  style=base,
+  basicstyle={\color{fg}\ttfamily},
+  keywords=[1]{},
+  keywords=[2]{},
+  keywords=[3]{},
+  keywords=[4]{},
+  keywords=[5]{},
+  numbers=none,
+}
+\lstdefinestyle{xterm}{%
+  style=base,
+}
+\lstdefinestyle{xtermsmall}{%
+  style=base,
+  resetmargins=true,
+  basicstyle={\color{IBMWhite}\supersmall},
+}
+% - - - - - - - - - - - - - - - - - - - - - - - - -
+\setulmarginsandblock{0.11111\paperwidth}{0.22222\paperwidth}{*}
+\setlrmarginsandblock{1.5cm}{1.5cm}{*}
+\setheadfoot{1.2\baselineskip}{0.0849\paperwidth}
+\setheaderspaces{*}{*}{0.618}
+\checkandfixthelayout[fixed]
+\tightlists
+\chapterstyle{bringhurst}
+\pagestyle{empty}
+\aliaspagestyle{chapter}{empty}
+\settocdepth{subsection}
+\setsecnumdepth{none}
+\newcommand{\ddash}{-\rule{0.1pt}{0pt}-}
+\newcommand{\bpara}[1]{\par\vspace{\beforeparaskip}\noindent\textbf{#1}\,}
+\newcommand{\rpara}[1]{\par\noindent\textbf{#1}\,}
+\newcommand{\dark}[1]{\texttt\textbf{{#1}}}
+\newcommand{\sfit}[1]{\textit{#1}}
+\newcommand{\git}{\sfit{git}}
+\newcommand*{\emailat}{@}
+\newcommand{\opname}{\sfit{untod}}
+\newcommand{\tpname}{\sfit{untod}}
+\newcommand{\tpfname}{\textsf{untod.sty}}
+\newcommand{\metaname}{\texttt{\ginname}}
+\newcommand{\metapath}{\texttt{.git/\ginname}}
+% -----------------------------------------------------
+\usepackage[%
+	bookmarksnumbered,
+	bookmarksopen,
+	linktocpage,
+	]{hyperref}
+\hypersetup{
+   pdfauthor={Brent Longborough},
+   pdftitle={The untod package: git metadata for LaTeX},
+   pdfkeywords={git;metadata;dvcs},
+}

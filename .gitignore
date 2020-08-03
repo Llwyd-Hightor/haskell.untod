@@ -8,6 +8,8 @@
 *.log
 *.nav
 *.out
+*.pdf
+*.pyc
 *.pyc
 *.snm
 *.synctex.gz
