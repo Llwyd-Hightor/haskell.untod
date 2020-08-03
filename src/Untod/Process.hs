@@ -1,5 +1,6 @@
 module Untod.Process
     where
+import Data.Char (toUpper)
 import Data.Maybe
 import Data.Time
 import Text.Read (readMaybe)
@@ -154,7 +155,7 @@ processFromTOD  v a w z = r where
             , formatLsec (csv a) (tickmode a) lsec
             ]
             (formatAnnot a)
-    ptod = padTod (padmode a) v
+    ptod = padTod (padmode a) (map toUpper v)
     xtod = readMaybe ("0x" ++ ptod) :: Maybe Int
     itod = fromJust xtod
     lsec = lsSearchByTOD (tickmode a) itod
@@ -181,18 +182,18 @@ processFromUNIX v a w z = r where
 processfromcoru :: String -> Uargs -> Uwork -> Int -> Int -> String
 processfromcoru v a w z vsec = r where
     r = joinRow (rSep w)
-        [ formatTod (1000000 * (tsec + lsec)) (tSep w)
+        [ formatTod (1000000 * (tsec + lsec - z)) (tSep w)
         , formatYMD udate
         , formatHMS udate
         , formatZone (tickmode a) z
         , formatJul udate
-       , formatDay udate
-        , formatPmc  $ calcPmc z udate
+        , formatDay udate
+        , formatPmc  $ calcPmc 0 udate
         , formatUnix (csv a) vsec
         , formatLsec (csv a) (tickmode a) lsec
         ]
         (formatAnnot a)
-    tsec = vsec + (z + tAdj w) + floor utDelta
+    tsec = vsec + z + floor utDelta
     udate = addUTCTime (fromIntegral tsec) tBase
     lsec = lsSearchByTOD (tickmode a) (1000000 * tsec)
 
@@ -231,8 +232,8 @@ getcsec s = readMaybe s :: Maybe Int
 -- -----------------------------------------------------------------------
 getdate :: String -> Maybe UTCTime
 getdate s 
-    | isNothing d = ptime "%Y.%j@%T%Q" j
     | "19" > take 2 s = Nothing
+    | isNothing d = ptime "%Y.%j@%T%Q" j
     | otherwise = d where
         t = s ++ drop (length s) "1900-01-01@00:00:00.000000000"
         j = s ++ drop (length s) "1900.001@00:00:00.000000000"

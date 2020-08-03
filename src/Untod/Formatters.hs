@@ -68,14 +68,17 @@ padTod :: PadMode -> String -> String
 padTod R v =
     printf "%16s" $ take 16 ( v ++ zeropad )
 padTod L v = take 16 v
-padTod I v = if 'B' < head v
-    then printf "000%-13s" $ take 13 ( v ++ zeropad )
-    else printf "00%-14s"  $ take 14 ( v ++ zeropad )
+padTod I v
+    | 13 < length v = padTod L v
+    | 'B' < head v =
+        printf "000%-13s" $ take 13 ( v ++ zeropad )
+    | otherwise =
+        printf "00%-14s"  $ take 14 ( v ++ zeropad )
 
 padPmc :: PadMode -> String -> String
 padPmc R v = printf "%8s" $ take 8 ( v ++ zeropad )
 padPmc L v = v
-padPmc I v = if '0' == head v
+padPmc I v = if '0' /= head v
     then v else padPmc R v
 
 zeropad :: String
