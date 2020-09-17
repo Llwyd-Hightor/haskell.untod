@@ -39,7 +39,7 @@ import Data.Time (
   )
 import System.Clipboard
 
-
+main :: IO ()
 main = do
     options <- execParser utOpts
 

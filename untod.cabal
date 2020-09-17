@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1ab79e28d34446c72d38199f5a6042c04fccb9af082e2e6e2455dc6dedfc8976
+-- hash: c527fc9fa1187735a0d5c2ea3c846d3f2cfefdd3cda2b0ddd99963cced9422af
 
 name:           untod
 version:        0.1.1.0
@@ -22,7 +22,6 @@ build-type:     Simple
 extra-source-files:
     README.md
     ChangeLog.md
-    .git/refs/heads/develop
 
 source-repository head
   type: git

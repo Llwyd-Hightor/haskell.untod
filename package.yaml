@@ -10,7 +10,7 @@ build-type:     Simple
 extra-source-files:
 - README.md
 - ChangeLog.md
-- .git\refs\heads\develop
+# - .git/refs/heads/develop
 
 # Metadata used when publishing your package
 

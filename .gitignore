@@ -22,3 +22,4 @@
 _darcs/
 docs/copyright.html
 .boring
+*.code-workspace

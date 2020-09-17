@@ -3,14 +3,7 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages:
-- completed:
-    hackage: printf-mauke-0.7.0@sha256:36e33061599d237720f1df26130edade7d72627697ebf43a1a0e715de4ac3250,607
-    pantry-tree:
-      size: 397
-      sha256: 678ac8020ed2676161e1b987a587bd84ba36377043bbe920ea13471c403f3cdb
-  original:
-    hackage: printf-mauke-0.7.0
+packages: []
 snapshots:
 - completed:
     size: 531707
